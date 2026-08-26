@@ -128,3 +128,74 @@
     @apply font-sans;
   }
 }
+/* ==========================================================================
+   Site: lilfrogeth.com  (site-key lilfrogeth-com-629a1bd8)
+   Tokens are `--lf-` prefixed so additional cloned sites cannot collide.
+   Source values extracted via getComputedStyle() at 1440x900.
+   ========================================================================== */
+
+:root {
+  --lf-ink: oklch(0 0 0);
+  --lf-acid: oklch(0.949 0.146 108.2);
+  --lf-cyan: oklch(0.78 0.132 231.5);
+  --lf-green: oklch(0.878 0.221 148.6);
+  --lf-paper: oklch(1 0 0);
+
+  --lf-body: rgba(0, 0, 0, 0.95);
+  --lf-scrim: rgba(15, 15, 15, 0.8);
+  --lf-hairline: rgba(255, 255, 255, 0.11);
+
+  /* 14px body / 16.1px line-height = 1.15; tracking -0.35px = -0.025em */
+  --lf-tracking-tight: -0.025em;
+  --lf-tracking-snug: -0.02em;
+  --lf-leading-body: 1.15;
+
+  /* Hero marquee rows alternate between two variants */
+  --lf-row-a: 190px;
+  --lf-row-b: 186px;
+}
+
+@theme inline {
+  --color-lf-ink: var(--lf-ink);
+  --color-lf-acid: var(--lf-acid);
+  --color-lf-cyan: var(--lf-cyan);
+  --color-lf-green: var(--lf-green);
+  --color-lf-paper: var(--lf-paper);
+}
+
+/* Lenis smooth scroll ----------------------------------------------------- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Seamless marquee: track holds two identical runs, shifted by -50% -------- */
+@keyframes lf-marquee-ltr {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+@keyframes lf-marquee-rtl {
+  from { transform: translate3d(-50%, 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class*="lf-marquee"] { animation: none !important; }
+}
+
+/* Hero entrance: measured 0.001 -> 1 over 800ms.
+   Starting at 0.001 rather than 0 keeps the layer composited, so the browser
+   does not discard and re-rasterise it on fade-in. */
+@keyframes lf-fade-in {
+  from { opacity: 0.001; }
+  to   { opacity: 1; }
+}
