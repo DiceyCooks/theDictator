@@ -9,6 +9,7 @@ type ArtSlotProps = {
   className?: string;
   /** Mirrors the original's object-fit so replacement art lands identically. */
   fit?: "cover" | "contain" | "fill";
+  style?: React.CSSProperties;
 };
 
 /**
@@ -24,6 +25,7 @@ export function ArtSlot({
   height,
   className,
   fit = "cover",
+  style,
 }: ArtSlotProps) {
   return (
     <div
@@ -37,7 +39,7 @@ export function ArtSlot({
         "border border-dashed border-[rgba(243,245,151,0.35)]",
         className,
       )}
-      style={{ width, height }}
+      style={{ width, height, ...style }}
     >
       <span className="px-3 text-center font-[family-name:var(--font-inter)] text-[11px] font-medium uppercase tracking-[-0.02em] text-[rgba(243,245,151,0.75)]">
         {label}
