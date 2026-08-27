@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { SmoothScroll } from "@/components/sites/lilfrogeth-com-629a1bd8/shared/SmoothScroll";
+import { SmoothScroll } from "@/components/sites/thedictator/shared/SmoothScroll";
 import "./globals.css";
 
 /**

@@ -29,7 +29,7 @@ export function Credits() {
       <ul className="mx-auto mt-3 flex max-w-[1200px] list-none flex-row flex-wrap items-start justify-center gap-x-8 gap-y-1 lf:mt-8 lf:gap-x-16">
         {ROWS.map((row, i) => (
           <li key={i} className="text-center">
-            <span className="block font-[family-name:var(--font-inter)] text-[14px] font-semibold uppercase leading-[1.15] tracking-[-0.025em] text-lf-acid">
+            <span className="block font-[family-name:var(--font-inter)] text-[14px] font-semibold uppercase leading-[1.15] tracking-[-0.025em] text-lf-ui">
               {row.name}
             </span>
             <span className="mt-1 block font-[family-name:var(--font-inter)] text-[12px] font-normal uppercase leading-[1.15] tracking-[-0.02em] text-[rgba(255,255,255,0.55)]">

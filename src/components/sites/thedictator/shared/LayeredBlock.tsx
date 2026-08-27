@@ -1,8 +1,8 @@
-import { ArtSlot } from "@/components/sites/lilfrogeth-com-629a1bd8/shared/ArtSlot";
+import { ArtSlot } from "@/components/sites/thedictator/shared/ArtSlot";
 import type {
   BlockSpec,
   BlockVariant,
-} from "@/components/sites/lilfrogeth-com-629a1bd8/root-8a5edab2/blocks.data";
+} from "@/components/sites/thedictator/blocks.data";
 import { cn } from "@/lib/utils";
 
 /**

@@ -1,8 +1,8 @@
-import { Hero } from "@/components/sites/lilfrogeth-com-629a1bd8/root-8a5edab2/Hero";
-import { Credits } from "@/components/sites/lilfrogeth-com-629a1bd8/root-8a5edab2/Credits";
-import { Overlays } from "@/components/sites/lilfrogeth-com-629a1bd8/root-8a5edab2/Overlays";
-import { BLOCKS } from "@/components/sites/lilfrogeth-com-629a1bd8/root-8a5edab2/blocks.data";
-import { LayeredBlock } from "@/components/sites/lilfrogeth-com-629a1bd8/shared/LayeredBlock";
+import { Hero } from "@/components/sites/thedictator/Hero";
+import { Credits } from "@/components/sites/thedictator/Credits";
+import { Overlays } from "@/components/sites/thedictator/Overlays";
+import { BLOCKS } from "@/components/sites/thedictator/blocks.data";
+import { LayeredBlock } from "@/components/sites/thedictator/shared/LayeredBlock";
 
 /**
  * Clone of https://lilfrogeth.com/ — structure and motion.
@@ -15,7 +15,7 @@ import { LayeredBlock } from "@/components/sites/lilfrogeth-com-629a1bd8/shared/
  * Artwork is not vendored. Each layer is an ArtSlot holding the measured
  * position and proportions of the original, ready for your own art.
  *
- * See docs/research/lilfrogeth-com-629a1bd8/root-8a5edab2/
+ * See docs/research/thedictator/
  */
 export default function Page() {
   return (

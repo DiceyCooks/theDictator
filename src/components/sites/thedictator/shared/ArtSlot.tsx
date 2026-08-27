@@ -35,13 +35,13 @@ export function ArtSlot({
       data-fit={fit}
       className={cn(
         "flex items-center justify-center overflow-hidden",
-        "bg-[repeating-linear-gradient(45deg,rgba(243,245,151,0.07)_0_12px,transparent_12px_24px)]",
-        "border border-dashed border-[rgba(243,245,151,0.35)]",
+        "bg-[repeating-linear-gradient(45deg,rgba(255,255,255,0.06)_0_12px,transparent_12px_24px)]",
+        "border border-dashed border-[rgba(255,255,255,0.3)]",
         className,
       )}
       style={{ width, height, ...style }}
     >
-      <span className="px-3 text-center font-[family-name:var(--font-inter)] text-[11px] font-medium uppercase tracking-[-0.02em] text-[rgba(243,245,151,0.75)]">
+      <span className="px-3 text-center font-[family-name:var(--font-inter)] text-[11px] font-medium uppercase tracking-[-0.02em] text-[rgba(255,255,255,0.72)]">
         {label}
         {width && height ? (
           <span className="mt-1 block text-[10px] font-normal opacity-60">

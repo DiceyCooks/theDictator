@@ -1,7 +1,7 @@
 # Page Topology — lilfrogeth.com/
 
 - **Source URL:** https://lilfrogeth.com/
-- **site-key:** `lilfrogeth-com-629a1bd8`
+- **site-key:** `thedictator`
 - **page-key:** `root-8a5edab2`
 - **Destination route:** `/` (`src/app/page.tsx` — fresh-template root clone)
 - **Captured at:** 1440×900 viewport (heights in the table below are from that width)

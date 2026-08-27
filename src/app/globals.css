@@ -129,7 +129,7 @@
   }
 }
 /* ==========================================================================
-   Site: lilfrogeth.com  (site-key lilfrogeth-com-629a1bd8)
+   Site: lilfrogeth.com  (site-key thedictator)
    Tokens are `--lf-` prefixed so additional cloned sites cannot collide.
    Source values extracted via getComputedStyle() at 1440x900.
    ========================================================================== */
@@ -137,6 +137,28 @@
 :root {
   --lf-ink: oklch(0 0 0);
   --lf-acid: oklch(0.949 0.146 108.2);
+
+  /* Hero display type. Black, sitting on the crimson gradient. */
+  --lf-type: oklch(0 0 0);
+
+  /* Type for the FIXED overlays (nav, bottom bar) and the credits. These travel
+     over the black blocks below the hero, so they cannot be black — they need a
+     colour that reads on both crimson and near-black. Gold picks up the braid
+     on the figure and gives the palette an accent against all that crimson. */
+  --lf-ui: oklch(0.84 0.135 86);
+
+  /* Hero gradient. Replaces the background plate image entirely.
+     A radial is inherently crop-safe: the plate box swings from 0.90 portrait
+     on phones to 1.85 on ultrawide and only its centre ~45% x 35% is ever
+     visible, so a centred glow reads correctly at every crop where a composed
+     scene would not. */
+  /* Lightness is deliberately high for a crimson: black display type has to stay
+     legible out to the vignette, so the darkest stop is 0.40 rather than the
+     0.075 used when the type was white. */
+  --lf-bg-hot: oklch(0.74 0.175 34);
+  --lf-bg-core: oklch(0.62 0.21 29);
+  --lf-bg-mid: oklch(0.52 0.205 26);
+  --lf-bg-edge: oklch(0.40 0.17 24);
   --lf-cyan: oklch(0.78 0.132 231.5);
   --lf-green: oklch(0.878 0.221 148.6);
   --lf-paper: oklch(1 0 0);
@@ -164,6 +186,8 @@
 
   --color-lf-ink: var(--lf-ink);
   --color-lf-acid: var(--lf-acid);
+  --color-lf-type: var(--lf-type);
+  --color-lf-ui: var(--lf-ui);
   --color-lf-cyan: var(--lf-cyan);
   --color-lf-green: var(--lf-green);
   --color-lf-paper: var(--lf-paper);
@@ -210,10 +234,88 @@ html.lenis body {
   to   { opacity: 1; }
 }
 
+/* Ambient drift of the hero plate.
+   The target pans its background plate continuously at ~73px/s, left, easing in
+   over roughly the first three seconds — a direct style mutation, which is why
+   it never appears in document.getAnimations(). That motion is what keeps the
+   hero from feeling dead behind the type.
+   The plate is scaled and inset -615px on every side specifically to give this
+   pan headroom without ever exposing an edge.
+   A one-way pan needs seamless artwork to loop; this gradient is not seamless,
+   so the cycle returns to its start instead. The perceptible movement is the
+   hot core travelling, plus a slow breathe on the scale. */
+@keyframes lf-drift {
+  0%   { transform: scale(1.5) translate3d(115px, -20px, 0); }
+  50%  { transform: scale(1.57) translate3d(-115px, 20px, 0); }
+  100% { transform: scale(1.5) translate3d(115px, -20px, 0); }
+}
+
+/* Drifting cloud layer.
+   The gradient drift alone is imperceptible: panning a smooth gradient moves
+   nothing the eye can track. The target's motion reads because it pans a
+   PAINTED TEXTURE — you see detail travel across the frame.
+   This supplies that detail as soft large-scale blobs. The tile is 1200px and
+   the pan is exactly one tile, so the loop is seamless, and the rate matches
+   the ~73px/s measured on the target. */
+.lf-hero-clouds {
+  background-image:
+    radial-gradient(ellipse 22% 48% at 12% 34%, oklch(1 0 0 / 0.10), transparent 62%),
+    radial-gradient(ellipse 18% 42% at 34% 72%, oklch(0 0 0 / 0.16), transparent 64%),
+    radial-gradient(ellipse 24% 50% at 58% 28%, oklch(1 0 0 / 0.07), transparent 60%),
+    radial-gradient(ellipse 20% 46% at 82% 62%, oklch(0 0 0 / 0.13), transparent 63%);
+  background-size: 1200px 100%;
+  background-repeat: repeat-x;
+  animation: lf-clouds 16.4s linear infinite;
+}
+
+@keyframes lf-clouds {
+  from { background-position: 0 0; }
+  to   { background-position: -1200px 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lf-hero-gradient { animation: none !important; transform: scale(1.5) !important; }
+  .lf-hero-clouds { animation: none !important; }
+}
+
 /* Fixed full-screen grain. The target overlays a texture bitmap at z-10 with
    pointer-events:none; this is an equivalent generated locally rather than
    vendoring their asset. */
 .lf-grain {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
   background-repeat: repeat;
+}
+
+/* Hero gradient plate ----------------------------------------------------- */
+.lf-hero-gradient {
+  background:
+    /* diagonal sheen — a raking light across the field, so it does not read as
+       a flat colour wash */
+    linear-gradient(
+      105deg,
+      transparent 28%,
+      oklch(1 0 0 / 0.07) 44%,
+      oklch(1 0 0 / 0.03) 52%,
+      transparent 64%
+    ),
+    /* hot core directly behind the figure, so a navy uniform reads against it */
+    radial-gradient(
+      ellipse 24% 28% at 50% 42%,
+      var(--lf-bg-hot) 0%,
+      transparent 72%
+    ),
+    /* main crimson body */
+    radial-gradient(
+      ellipse 56% 44% at 50% 44%,
+      var(--lf-bg-core) 0%,
+      var(--lf-bg-mid) 58%,
+      transparent 100%
+    ),
+    /* vignette: pulls the corners down so the centre carries the eye */
+    radial-gradient(
+      ellipse 78% 68% at 50% 45%,
+      transparent 38%,
+      var(--lf-bg-edge) 100%
+    ),
+    var(--lf-bg-edge);
 }
