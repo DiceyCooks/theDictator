@@ -138,14 +138,14 @@
   --lf-ink: oklch(0 0 0);
   --lf-acid: oklch(0.949 0.146 108.2);
 
-  /* Hero display type. Black, sitting on the crimson gradient. */
-  --lf-type: oklch(0 0 0);
+  /* Hero display type. White, sitting on the black sky. */
+  --lf-type: oklch(1 0 0);
 
   /* Type for the FIXED overlays (nav, bottom bar) and the credits. These travel
-     over the black blocks below the hero, so they cannot be black — they need a
-     colour that reads on both crimson and near-black. Gold picks up the braid
-     on the figure and gives the palette an accent against all that crimson. */
-  --lf-ui: oklch(0.84 0.135 86);
+     over the black sky AND the black blocks below it, so the colour has to read
+     on both. White matches the display type and keeps the page to one palette;
+     the nav stays distinct by size and position rather than by hue. */
+  --lf-ui: oklch(1 0 0);
 
   /* Hero gradient. Replaces the background plate image entirely.
      A radial is inherently crop-safe: the plate box swings from 0.90 portrait
@@ -155,10 +155,12 @@
   /* Lightness is deliberately high for a crimson: black display type has to stay
      legible out to the vignette, so the darkest stop is 0.40 rather than the
      0.075 used when the type was white. */
-  --lf-bg-hot: oklch(0.74 0.175 34);
-  --lf-bg-core: oklch(0.62 0.21 29);
-  --lf-bg-mid: oklch(0.52 0.205 26);
-  --lf-bg-edge: oklch(0.40 0.17 24);
+  /* Night sky. Cool near-black, lifting very slightly toward the horizon so the
+     field is not a flat fill. Kept dark enough that white clouds and white
+     display type both carry. */
+  --lf-sky-high: oklch(0.045 0.012 262);
+  --lf-sky-mid: oklch(0.105 0.018 256);
+  --lf-sky-low: oklch(0.185 0.024 250);
   --lf-cyan: oklch(0.78 0.132 231.5);
   --lf-green: oklch(0.878 0.221 148.6);
   --lf-paper: oklch(1 0 0);
@@ -250,32 +252,72 @@ html.lenis body {
   100% { transform: scale(1.5) translate3d(115px, -20px, 0); }
 }
 
-/* Drifting cloud layer.
-   The gradient drift alone is imperceptible: panning a smooth gradient moves
-   nothing the eye can track. The target's motion reads because it pans a
-   PAINTED TEXTURE — you see detail travel across the frame.
-   This supplies that detail as soft large-scale blobs. The tile is 1200px and
-   the pan is exactly one tile, so the loop is seamless, and the rate matches
-   the ~73px/s measured on the target. */
-.lf-hero-clouds {
-  background-image:
-    radial-gradient(ellipse 22% 48% at 12% 34%, oklch(1 0 0 / 0.10), transparent 62%),
-    radial-gradient(ellipse 18% 42% at 34% 72%, oklch(0 0 0 / 0.16), transparent 64%),
-    radial-gradient(ellipse 24% 50% at 58% 28%, oklch(1 0 0 / 0.07), transparent 60%),
-    radial-gradient(ellipse 20% 46% at 82% 62%, oklch(0 0 0 / 0.13), transparent 63%);
-  background-size: 1200px 100%;
+/* Drifting clouds, two layers.
+   Depth comes from parallax: the far bank is smaller, dimmer and slower; the
+   near bank is larger, brighter and moves at ~73px/s, the rate measured on the
+   target. Each tile pans by exactly its own width, so both loop seamlessly.
+   Puffiness comes from clustering several ellipses at similar heights rather
+   than spacing them evenly. */
+.lf-clouds-far,
+.lf-clouds-near {
   background-repeat: repeat-x;
-  animation: lf-clouds 16.4s linear infinite;
 }
 
-@keyframes lf-clouds {
+/* Vertical spread matters as much as horizontal. An earlier pass banded every
+   ellipse across the middle of the frame and left the top and bottom empty.
+
+   CONTAINMENT RULE — a radial gradient is CLIPPED at its tile edge, never
+   wrapped. Any ellipse whose radius crosses 0% or 100% gets sliced flat, and a
+   sliced ellipse reads as a hard-edged rectangle. Spreading these toward the
+   edges pushed 8 of 13 past the boundary and produced exactly that.
+
+   So for every stop below: X - W >= 0, X + W <= 100, Y - H >= 0, Y + H <= 100,
+   where W and H are RADII, not diameters. The edges are still approached — the
+   gradient fades to transparent well before its radius, so an ellipse ending at
+   y 1% or 98% reads as touching the edge without ever being cut.
+
+   Size and opacity stay uneven on purpose: equal blobs at equal spacing read as
+   a pattern, not as light. The tight bright pools are what give the spotlight
+   quality; the broad dim ones sit behind them. */
+.lf-clouds-far {
+  background-image:
+    radial-gradient(ellipse 8% 14% at 10% 15%, oklch(1 0 0 / 0.18), transparent 60%),
+    radial-gradient(ellipse 13% 26% at 30% 42%, oklch(1 0 0 / 0.12), transparent 65%),
+    radial-gradient(ellipse 6% 12% at 46% 14%, oklch(1 0 0 / 0.20), transparent 58%),
+    radial-gradient(ellipse 15% 28% at 62% 66%, oklch(1 0 0 / 0.11), transparent 66%),
+    radial-gradient(ellipse 9% 17% at 78% 27%, oklch(1 0 0 / 0.17), transparent 60%),
+    radial-gradient(ellipse 11% 20% at 88% 78%, oklch(1 0 0 / 0.14), transparent 63%),
+    radial-gradient(ellipse 7% 13% at 20% 84%, oklch(1 0 0 / 0.19), transparent 59%);
+  background-size: 1600px 100%;
+  animation: lf-clouds-far 44s linear infinite;
+}
+
+.lf-clouds-near {
+  background-image:
+    radial-gradient(ellipse 18% 30% at 20% 68%, oklch(1 0 0 / 0.25), transparent 65%),
+    radial-gradient(ellipse 10% 18% at 34% 20%, oklch(1 0 0 / 0.33), transparent 59%),
+    radial-gradient(ellipse 20% 32% at 52% 66%, oklch(1 0 0 / 0.21), transparent 67%),
+    radial-gradient(ellipse 12% 24% at 66% 30%, oklch(1 0 0 / 0.30), transparent 61%),
+    radial-gradient(ellipse 16% 28% at 82% 56%, oklch(1 0 0 / 0.23), transparent 64%),
+    radial-gradient(ellipse 9% 16% at 90% 18%, oklch(1 0 0 / 0.31), transparent 58%);
+  background-size: 1100px 100%;
+  animation: lf-clouds-near 15s linear infinite;
+}
+
+@keyframes lf-clouds-far {
   from { background-position: 0 0; }
-  to   { background-position: -1200px 0; }
+  to   { background-position: -1600px 0; }
+}
+
+@keyframes lf-clouds-near {
+  from { background-position: 0 0; }
+  to   { background-position: -1100px 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .lf-hero-gradient { animation: none !important; transform: scale(1.5) !important; }
-  .lf-hero-clouds { animation: none !important; }
+  .lf-clouds-far,
+  .lf-clouds-near { animation: none !important; }
 }
 
 /* Fixed full-screen grain. The target overlays a texture bitmap at z-10 with
@@ -289,33 +331,20 @@ html.lenis body {
 /* Hero gradient plate ----------------------------------------------------- */
 .lf-hero-gradient {
   background:
-    /* diagonal sheen — a raking light across the field, so it does not read as
-       a flat colour wash */
+    /* faint glow behind the figure, so the navy uniform does not sit on flat
+       black */
+    radial-gradient(
+      ellipse 34% 30% at 50% 46%,
+      var(--lf-sky-low) 0%,
+      transparent 70%
+    ),
+    /* vertical sky: darkest overhead, lifting toward the horizon */
     linear-gradient(
-      105deg,
-      transparent 28%,
-      oklch(1 0 0 / 0.07) 44%,
-      oklch(1 0 0 / 0.03) 52%,
-      transparent 64%
+      to bottom,
+      var(--lf-sky-high) 0%,
+      var(--lf-sky-mid) 54%,
+      var(--lf-sky-low) 88%,
+      var(--lf-sky-mid) 100%
     ),
-    /* hot core directly behind the figure, so a navy uniform reads against it */
-    radial-gradient(
-      ellipse 24% 28% at 50% 42%,
-      var(--lf-bg-hot) 0%,
-      transparent 72%
-    ),
-    /* main crimson body */
-    radial-gradient(
-      ellipse 56% 44% at 50% 44%,
-      var(--lf-bg-core) 0%,
-      var(--lf-bg-mid) 58%,
-      transparent 100%
-    ),
-    /* vignette: pulls the corners down so the centre carries the eye */
-    radial-gradient(
-      ellipse 78% 68% at 50% 45%,
-      transparent 38%,
-      var(--lf-bg-edge) 100%
-    ),
-    var(--lf-bg-edge);
+    var(--lf-sky-high);
 }

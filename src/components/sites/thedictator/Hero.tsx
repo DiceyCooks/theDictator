@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Marquee } from "@/components/sites/thedictator/shared/Marquee";
-import { ArtSlot } from "@/components/sites/thedictator/shared/ArtSlot";
 
 /**
  * Hero — block 0 (`framer-ab08lb`), full viewport height, overflow hidden.
@@ -8,14 +7,17 @@ import { ArtSlot } from "@/components/sites/thedictator/shared/ArtSlot";
  * Measured at 100vh across every breakpoint (957 at vh 957, 1024 at vh 1024,
  * 844 at vh 844), so it is sized in vh rather than fixed px.
  *
- * Five layers, bottom to top. Geometry below is measured at a 1440 viewport
+ * Layers, bottom to top. Geometry below is measured at a 1440 viewport
  * (hero box 1425x900) and expressed as percentages of that box.
  *
  *   1. background plate  inset negative on all sides, scale(1.5), fades in
+ *   1b. cloud banks      two parallax layers, the visible motion
  *   2. marquee rows      six rows, alternating height and direction
- *   3. ground band       full-width strip across the lower third
+ *   3. ground            full-width shape closing into the next panel
  *   4. figure            the character, object-fit: contain
- *   5. accent dot        a 10px detail
+ *
+ * The target also carries a 10px accent dot at the right of the hero. It is
+ * dropped here — nothing is going in that slot.
  *
  * Only layer 1 animates. The marquee rows loop continuously; nothing else moves.
  */
@@ -24,9 +26,8 @@ import { ArtSlot } from "@/components/sites/thedictator/shared/ArtSlot";
 const ROWS = [190, 186, 190, 186, 190, 186] as const;
 
 /**
- * Per-row opacity. The stack reads flat when every row is at full strength, so
- * the outer rows are pulled back and the middle two sit forward — the figure
- * stands in the strongest band and the rest recedes.
+ * Per-row opacity. The outer rows are pulled back and the middle two sit
+ * forward, so the stack reads with depth instead of flat.
  */
 const ROW_OPACITY = [0.42, 0.72, 1, 1, 0.72, 0.42] as const;
 
@@ -68,17 +69,17 @@ export function Hero() {
           the eye to track, so on its own it looks static however fast it pans. */}
       <div
         aria-hidden="true"
-        className="lf-hero-clouds pointer-events-none absolute inset-0 z-[1] mix-blend-soft-light"
+        className="lf-clouds-far pointer-events-none absolute inset-0 z-[1]"
+      />
+      <div
+        aria-hidden="true"
+        className="lf-clouds-near pointer-events-none absolute inset-0 z-[1]"
       />
 
       {/* 2 — marquee stack */}
       <div className="absolute inset-x-0 top-[60px] bottom-[-60px] z-[2] flex flex-col items-center">
         {ROWS.map((height, i) => (
-          <div
-            key={i}
-            className="w-full"
-            style={{ opacity: ROW_OPACITY[i] }}
-          >
+          <div key={i} className="w-full" style={{ opacity: ROW_OPACITY[i] }}>
             <Marquee
               height={height}
               direction={i % 2 === 0 ? "left" : "right"}
@@ -116,14 +117,20 @@ export function Hero() {
 
       {/* 4 — figure. object-fit contain, sitting slightly left of centre.
           The source is 941x1672 (aspect 0.563), taller than the box, so it fills
-          the box height and pillarboxes horizontally, centred. */}
+          the box height and pillarboxes horizontally, centred.
+
+          Scaled 1.28x above the geometry measured on the target, because this
+          character is far narrower than the one it replaces (0.563 vs 0.723) and
+          was drawing ~478px wide against display type this heavy. Grown about
+          the figure's own vertical centre, so the head still clears the nav and
+          the feet stay below the ground shape. */}
       <div
         className="pointer-events-none absolute z-[4]"
         style={{
-          left: "22.596%",
-          top: "23.444%",
-          width: "47.298%",
-          height: "88.778%",
+          left: "16%",
+          top: "11%",
+          width: "60.5%",
+          height: "113.6%",
         }}
       >
         <Image
@@ -134,19 +141,6 @@ export function Hero() {
           sizes="(max-width: 810px) 70vw, 48vw"
           className="object-contain"
         />
-      </div>
-
-      {/* 5 — accent dot, a 10px detail on the right */}
-      <div
-        className="pointer-events-none absolute z-[6]"
-        style={{
-          left: "77.754%",
-          top: "64.111%",
-          width: "0.702%",
-          height: "1.111%",
-        }}
-      >
-        <ArtSlot label="Dot" fit="cover" className="h-full w-full" />
       </div>
     </section>
   );
