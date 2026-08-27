@@ -184,13 +184,17 @@ html.lenis body {
   overflow: hidden;
 }
 
-/* Seamless marquee: track holds two identical runs, shifted by -50% -------- */
+/* Seamless marquee.
+   The track repeats the run enough times to cover the container PLUS one spare
+   run, then shifts by exactly one run width (--lf-run). Shifting by -50% only
+   works when the track is exactly two runs, and leaves a gap as soon as the
+   container is wider than a single run — which is why the target uses four. */
 @keyframes lf-marquee-ltr {
   from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-50%, 0, 0); }
+  to   { transform: translate3d(calc(-1 * var(--lf-run)), 0, 0); }
 }
 @keyframes lf-marquee-rtl {
-  from { transform: translate3d(-50%, 0, 0); }
+  from { transform: translate3d(calc(-1 * var(--lf-run)), 0, 0); }
   to   { transform: translate3d(0, 0, 0); }
 }
 

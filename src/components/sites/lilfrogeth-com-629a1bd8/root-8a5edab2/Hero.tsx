@@ -21,13 +21,16 @@ import { ArtSlot } from "@/components/sites/lilfrogeth-com-629a1bd8/shared/ArtSl
 /** Row heights alternate between two variants on the target. */
 const ROWS = [190, 186, 190, 186, 190, 186] as const;
 
+/** The wordmark repeated across every marquee row. */
+const WORDMARK = "THEDICTATOR";
+
 function Wordmark() {
   return (
     <span
       className="select-none whitespace-nowrap px-[0.06em] font-[family-name:var(--font-inter)] font-black uppercase leading-[0.78] tracking-[-0.045em] text-lf-acid"
       style={{ fontSize: "150px" }}
     >
-      Placeholder
+      {WORDMARK}
     </span>
   );
 }
