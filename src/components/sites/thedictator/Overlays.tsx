@@ -59,6 +59,30 @@ function NavMark() {
   );
 }
 
+/**
+ * Airdrop CTA, top-right — the counterweight to the logo on the left.
+ *
+ * Filled rather than outlined: it is the only action in the hero, and against
+ * white type on a black sky an outline would read as just more nav. Inverting it
+ * (black text on white) makes it the brightest element on the page, which is
+ * what a single CTA should be.
+ *
+ * Set in Luckiest Guy to match the logo, which works here where it did not for
+ * the nav links: it is two words at button size, not a row of items to scan.
+ */
+function AirdropButton() {
+  return (
+    <a
+      href="#airdrop"
+      className="fixed right-4 top-[10px] z-10 flex h-[51px] items-center sm:right-7"
+    >
+      <span className="rounded-full bg-lf-ui px-5 py-2 font-[family-name:var(--font-display)] text-[16px] leading-none tracking-[0.01em] text-lf-ink shadow-[0_6px_24px_rgba(0,0,0,0.45)] transition-transform duration-200 hover:scale-[1.04] sm:px-6 sm:py-2.5 sm:text-[20px]">
+        Airdrop
+      </span>
+    </a>
+  );
+}
+
 export function Overlays() {
   const sentinelRef = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -110,6 +134,7 @@ export function Overlays() {
           the threshold a glass bar fades in behind them, which gives the nav
           something to sit on once it is over busy content rather than sky. */}
       <NavMark />
+      <AirdropButton />
 
       {/* The pill now holds only the links and hugs them, rather than being a
           fixed 717px bar with the logo pinned to one end. A wide bar with three

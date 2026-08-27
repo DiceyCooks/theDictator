@@ -201,9 +201,17 @@ export function Hero() {
           what makes this read as ground rather than a stripe across the page. */}
       {GROUND_STYLE === "hard" ? <GroundHard /> : <GroundSoft />}
 
-      {/* 4 — figure. object-fit contain, sitting slightly left of centre.
-          The source is 941x1672 (aspect 0.563), taller than the box, so it fills
-          the box height and pillarboxes horizontally, centred.
+      {/* 4 — figure. object-fit contain, centred on the page.
+          The source is 1057x1672 (aspect 0.632), taller than the box, so it
+          fills the box height and pillarboxes horizontally, centred.
+
+          The PNG carries 116px of transparent padding on its right, added
+          deliberately. As generated, the character's torso centroid sat 58px
+          RIGHT of the file's midpoint, so centring the file left his body
+          visibly off-centre and he read as leaning. Padding the short side makes
+          his spine the true midpoint of his own image, which means ordinary
+          centring works at every breakpoint instead of needing a hand-tuned
+          offset per viewport.
 
           Scaled 1.28x above the geometry measured on the target, because this
           character is far narrower than the one it replaces (0.563 vs 0.723) and
@@ -213,14 +221,17 @@ export function Hero() {
       <div
         className="pointer-events-none absolute z-[4]"
         style={{
-          left: "16%",
+          // Box centre sits on page centre (50 - 60.5/2). This only lands the
+          // character on centre because the PNG was re-padded so his spine is
+          // the midpoint of his own file — see the note above.
+          left: "19.75%",
           top: "11%",
           width: "60.5%",
           height: "113.6%",
         }}
       >
         <Image
-          src="/sites/thedictator/images/hero-figure.png"
+          src="/sites/thedictator/images/hero-figure-v2.png"
           alt=""
           fill
           priority
