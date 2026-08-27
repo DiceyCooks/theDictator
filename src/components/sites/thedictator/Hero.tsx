@@ -32,7 +32,7 @@ const ROWS = [190, 186, 190, 186, 190, 186] as const;
 const ROW_OPACITY = [0.42, 0.72, 1, 1, 0.72, 0.42] as const;
 
 /** The wordmark repeated across every marquee row. */
-const WORDMARK = "THEDICTATOR";
+const WORDMARK = "THE DICTATOR";
 
 function Wordmark() {
   return (
