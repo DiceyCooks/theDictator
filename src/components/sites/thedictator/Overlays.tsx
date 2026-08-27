@@ -40,13 +40,19 @@ const NAV_LINKS = [
 
 /**
  * Ticker logo. Luckiest Guy, loaded in the root layout as --font-display.
- * Slight positive tracking because the face sets tight at small sizes.
+ *
+ * Pinned to the top-left of the viewport as its own fixed element rather than
+ * living inside the nav pill. Inside the pill it had to stay small enough not to
+ * crowd the links; out here it can run at display size, and the links get the
+ * pill to themselves.
+ *
+ * Vertically centred on the same 10px/51px axis as the nav so the two line up.
  */
 function NavMark() {
   return (
     <a
       href="#top"
-      className="shrink-0 font-[family-name:var(--font-display)] text-[22px] leading-none tracking-[0.01em] text-lf-ui transition-opacity duration-200 hover:opacity-70 sm:text-[26px]"
+      className="fixed left-4 top-[10px] z-10 flex h-[51px] items-center font-[family-name:var(--font-display)] text-[30px] leading-none tracking-[0.01em] text-lf-ui transition-opacity duration-200 hover:opacity-70 sm:left-7 sm:text-[40px]"
     >
       {TICKER}
     </a>
@@ -103,22 +109,30 @@ export function Overlays() {
           At the top of the page the labels float free with no container. Past
           the threshold a glass bar fades in behind them, which gives the nav
           something to sit on once it is over busy content rather than sky. */}
+      <NavMark />
+
+      {/* The pill now holds only the links and hugs them, rather than being a
+          fixed 717px bar with the logo pinned to one end. A wide bar with three
+          items floating in the middle reads as empty; sized to its content it
+          reads as a deliberate capsule. */}
       <nav
         className={cn(
-          "fixed left-1/2 top-[10px] z-10 flex h-[51px] w-[717px] max-w-[calc(100%-24px)] -translate-x-1/2 items-center justify-between gap-4 rounded-full px-5 sm:gap-8",
+          // Below sm the logo and the pill cannot share a row: at 390 the logo
+          // runs to x118 and a 328px pill starts at x31, an 87px collision.
+          // Their combined width simply exceeds the viewport, so the pill drops
+          // to a second row there and rejoins the logo's row from sm up.
+          "fixed left-1/2 top-[68px] z-10 flex h-[51px] max-w-[calc(100%-32px)] -translate-x-1/2 items-center justify-center gap-6 rounded-full px-6 sm:top-[10px] sm:gap-9 sm:px-8",
           "transition-[background-color,backdrop-filter,border-color,box-shadow] duration-300 ease-out",
           scrolled
             ? "border border-white/10 bg-white/[0.06] shadow-[0_8px_32px_rgba(0,0,0,0.38)] backdrop-blur-md"
             : "border border-transparent bg-transparent shadow-none backdrop-blur-none",
         )}
       >
-        <NavMark />
-
         {NAV_LINKS.map((link) => (
           <a
             key={link.label}
             href={link.href}
-            className="shrink-0 whitespace-nowrap font-[family-name:var(--font-inter)] text-[13px] font-semibold uppercase leading-[1.15] tracking-[-0.025em] text-lf-ui transition-opacity duration-200 hover:opacity-60 sm:text-[14px]"
+            className="shrink-0 whitespace-nowrap font-[family-name:var(--font-inter)] text-[15px] font-bold uppercase leading-none tracking-[0.02em] text-lf-ui transition-opacity duration-200 hover:opacity-60 sm:text-[17px]"
           >
             {link.label}
           </a>
