@@ -20,13 +20,13 @@ export function Credits() {
     <section
       aria-label="Credits"
       data-block="fhalzc"
-      className="relative w-full bg-lf-ink px-6 py-12"
+      className="relative flex h-[100px] w-full flex-col justify-center bg-lf-ink px-6 lf:h-[248px]"
     >
       <h2 className="text-center font-[family-name:var(--font-inter)] text-[14px] font-medium uppercase leading-[1.15] tracking-[-0.025em] text-lf-paper">
         Credits
       </h2>
 
-      <ul className="mx-auto mt-8 flex max-w-[1200px] list-none flex-col items-center gap-4 sm:flex-row sm:justify-center sm:gap-16">
+      <ul className="mx-auto mt-3 flex max-w-[1200px] list-none flex-row flex-wrap items-start justify-center gap-x-8 gap-y-1 lf:mt-8 lf:gap-x-16">
         {ROWS.map((row, i) => (
           <li key={i} className="text-center">
             <span className="block font-[family-name:var(--font-inter)] text-[14px] font-semibold uppercase leading-[1.15] tracking-[-0.025em] text-lf-acid">

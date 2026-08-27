@@ -26,42 +26,75 @@ derived from a resized tab and is wrong.
 Block heights, by contrast, agreed between resize and clean load at 390, so those measurements
 survived scrutiny.
 
-## Breakpoint
+## Breakpoints
 
-**810px** — Framer's phone default.
+**Three variants, not two.**
 
-Confirmed by bisection: at 810 the desktop variant still renders (`18hopws` 1200px,
-`scrollHeight` 20203); at 768 it has switched (`18hopws` 651px, `scrollHeight` 16291).
+| Variant | Range | Captured at | scrollHeight |
+|---|---|---|---|
+| large | >= 1600 | 1600 (content 1585) | 18,291 |
+| desktop | 810 - 1599 | 1440 (content 1425) | 20,203 |
+| mobile | < 810 | 390 | 15,536 |
 
-There is no separate tablet variant. 768 and 390 produce **identical** heights on every block but
-`k5szjo`, so tablet and phone are one and the same layout.
+Both boundaries found by bisection on clean loads:
+- 1550 -> desktop (`k5szjo` 2065), 1600 -> large (`k5szjo` 2740).
+- 810 -> desktop (`18hopws` 1200), 768 -> mobile (`18hopws` 651).
+
+There is no separate tablet variant — 768 and 390 are the same layout.
+
+### The 1600px breakpoint was missed at first, and it mattered
+
+Five blocks appeared to be **fluid**, scaling with viewport width. They are not. Every block has a
+**fixed** height within its variant. The apparent fluidity was large-variant readings being compared
+against desktop-variant readings before the 1600 boundary was known:
+
+| Block | desktop (810-1599) | large (>=1600) |
+|---|---|---|
+| `k5szjo` | 2065 | 2740 |
+| `kcykm` | 3164 | 2590 |
+| `10ytyjo` | 3022 | 2852 |
+| `1htt17w` | 1989 | 796 |
+| `mnfkb7` | 2696 | 2046 |
+
+Verified fixed within the desktop variant by clean loads at 900, 1440, 1500 and 1550, which all
+return identical heights.
+
+### The one genuine exception
+
+`k5szjo` **is** fluid inside the mobile variant, and only there. Clean loads:
+
+| viewport | height |
+|---|---|
+| 390 | 2562 |
+| 550 | 2730 |
+| 768 | 3102 |
+
+Not linear — the slope is 1.05 from 390 to 550, then 1.71 from 550 to 768, so any two-point formula
+is wrong. The clone uses a least-squares fit across all three points,
+`calc(1975px + 144.48vw)`, with a maximum residual near 40px on a 2.5-3.1k block (under 1.5%).
+This is the only **approximate** height in the build; every other one is exact.
 
 ## Height model
 
-Below 810 blocks take **fixed pixel heights** — they do not scale with width. Above it the model is
-mixed:
+Heights are fixed within every variant (sole exception above). Two blocks are viewport-height:
 
-| Block | @1440 | @1905 | Behavior on desktop |
-|---|---|---|---|
-| `ab08lb` (hero) | 900 | 957 | **100vh** |
-| `tgbvc8` | 900 | 957 | **100vh** |
-| `18hopws` | 1200 | 1200 | fixed |
-| `12iimvw` | 1200 | 1200 | fixed |
-| `1csghqk` | 1250 | 1250 | fixed |
-| `1pk46w7` | 953 | 953 | fixed |
-| `fhalzc` | 248 | 248 | fixed |
-| `pf7mlq` | 261 | 261 | fixed |
-| `k5szjo` | 2065 | 2911 | fluid — grows with width |
-| `kcykm` | 3164 | 2590 | fluid — shrinks with width |
-| `10ytyjo` | 3022 | 2852 | fluid |
-| `1htt17w` | 1989 | 796 | fluid |
-| `mnfkb7` | 2696 | 2046 | fluid |
+| Block | Behavior |
+|---|---|
+| `ab08lb` (hero) | **100vh** — 900 at vh 900, 1024 at vh 1024, 844 at vh 844 |
+| `tgbvc8` | **100vh** |
+| all others | fixed px per variant |
 
-The hero reads as fixed-px if sampled at a single viewport. It is not — it tracks viewport height
-exactly at every width (957 at vh 957, 1024 at vh 1024, 844 at vh 844).
+The hero reads as fixed-px if sampled at a single viewport. It is not.
 
-The five fluid blocks are driven by the intrinsic heights of the images inside them. The clone pins
-them to their measured 1440 values, which is an **approximation** at other desktop widths.
+## The 14th block
+
+The original enumeration listed 15 children and **missed one**: `framer-1rvi7xe`, an empty 355px
+spacer between `k5szjo` and `1htt17w` at top 5065. No images, no text, transparent. It is present in
+the desktop and large variants and **absent at mobile** — the mirror of the two mobile-only spacers
+after the hero.
+
+It went unnoticed because the first enumeration ran against a stale DOM. It accounted for exactly
+the 355px by which the clone's page height was short at every desktop width.
 
 ## Blocks wider than the viewport
 
@@ -80,12 +113,16 @@ They are centred and the page clips horizontally. The clone reproduces this and 
 
 | Width | Target | Clone | Δ |
 |---|---|---|---|
-| 1440 | 20,203 | 19,778 | −2.1% |
-| 768 | 16,291 | 15,794 | −3.1% |
-| 390 | 15,536 | 15,714 | +1.1% |
+| 1920 | 18,291 | 18,291 | **exact** |
+| 1440 | 20,203 | 20,203 | **exact** |
+| 768 | 16,291 | 16,239 | −52 (0.3%) |
+| 390 | 15,536 | 15,512 | −24 (0.15%) |
 
-Note the target is **taller at 1440 than at 1920** (20,203 vs 18,291), because the fluid blocks and
-the fixed-width blocks respond to width in opposite directions.
+The two sub-percent gaps are the `k5szjo` least-squares fit trading exactness at any single mobile
+width for accuracy across the whole range.
+
+Note the target is **taller at 1440 than at 1920** (20,203 vs 18,291) — that is the desktop and
+large variants being different compositions, not a fluid response to width.
 
 ## Fixed overlays
 

@@ -156,9 +156,11 @@
 }
 
 @theme inline {
-  /* Framer's phone breakpoint. Above it the desktop variant renders; below it
-     the mobile variant, which uses fixed pixel heights instead of scaling. */
+  /* Framer's phone breakpoint: below it the mobile variant renders. */
   --breakpoint-lf: 810px;
+  /* Large-desktop variant. Heights are fixed within each variant; the five
+     blocks that looked fluid were simply this variant read against the other. */
+  --breakpoint-lflg: 1600px;
 
   --color-lf-ink: var(--lf-ink);
   --color-lf-acid: var(--lf-acid);

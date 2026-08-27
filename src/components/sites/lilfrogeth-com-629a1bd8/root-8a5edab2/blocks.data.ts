@@ -1,17 +1,23 @@
 // GENERATED from live measurement of https://lilfrogeth.com/.
-// Desktop captured at a 1440 viewport (1425px content), mobile at 390 — both on
-// CLEAN PAGE LOADS. Resizing alone is not sufficient: Framer swaps breakpoint
-// variants by re-rendering, and stale nodes from the previous variant survive a
-// resize, which silently corrupts any measurement taken that way.
+// Every variant is captured on a CLEAN PAGE LOAD. Resizing alone is not
+// sufficient: Framer swaps breakpoint variants by re-rendering, and stale nodes
+// from the previous variant survive a resize, silently corrupting measurements.
 //
-// The layout breakpoint is 810px (Framer's phone default): at >=810 the desktop
-// variant renders, below it the mobile variant, which uses FIXED pixel heights
-// rather than scaling.
+// THREE variants, boundaries confirmed by bisection:
+//   large    >=1600px  (captured at 1600, content width 1585)
+//   desktop  810-1599  (captured at 1440, content width 1425)
+//   mobile   <810      (captured at 390)
 //
-// Slot positions are percentages of their own block box at that breakpoint.
+// Heights are FIXED within each variant. None of these blocks is fluid. Five
+// blocks appeared to scale with width only because large-variant readings were
+// being compared against desktop-variant readings before the 1600px breakpoint
+// was discovered.
+//
+// Slot positions are percentages of their own block box in that variant.
 // Regenerate rather than hand-editing.
 
-export const LAYOUT_BREAKPOINT = 810;
+export const BREAKPOINT_LARGE = 1600;
+export const BREAKPOINT_LAYOUT = 810;
 
 export type ArtSlotSpec = {
   id: string;
@@ -34,6 +40,7 @@ export type BlockSpec = {
   key: string;
   name: string;
   dark: boolean;
+  large: BlockVariant;
   desktop: BlockVariant;
   mobile: BlockVariant;
 };
@@ -43,6 +50,84 @@ export const BLOCKS: BlockSpec[] = [
     "key": "18hopws",
     "name": "Bloom",
     "dark": false,
+    "large": {
+      "height": "1200px",
+      "fixedWidth": null,
+      "slots": [
+        {
+          "id": "Bloom-1",
+          "left": -19.369,
+          "top": -18.75,
+          "width": 145.615,
+          "height": 138.75,
+          "fit": "cover"
+        },
+        {
+          "id": "Bloom-2",
+          "left": 13.565,
+          "top": 23.083,
+          "width": 52.808,
+          "height": 74.5,
+          "fit": "cover"
+        },
+        {
+          "id": "Bloom-3",
+          "left": -27.571,
+          "top": 26.917,
+          "width": 70.536,
+          "height": 94.583,
+          "fit": "cover"
+        },
+        {
+          "id": "Bloom-4",
+          "left": 60.126,
+          "top": 8.917,
+          "width": 68.959,
+          "height": 99.5,
+          "fit": "cover"
+        },
+        {
+          "id": "Bloom-5",
+          "left": 41.893,
+          "top": 47.833,
+          "width": 46.751,
+          "height": 67.5,
+          "fit": "cover"
+        },
+        {
+          "id": "Bloom-6",
+          "left": -0.631,
+          "top": 39.833,
+          "width": 41.199,
+          "height": 63.917,
+          "fit": "cover"
+        },
+        {
+          "id": "Bloom-7",
+          "left": 60.505,
+          "top": 58.25,
+          "width": 26.751,
+          "height": 46.417,
+          "fit": "cover"
+        },
+        {
+          "id": "Bloom-8",
+          "left": 0,
+          "top": -0.083,
+          "width": 100,
+          "height": 8.5,
+          "fit": "cover"
+        },
+        {
+          "id": "Bloom-9",
+          "left": 0,
+          "top": 95,
+          "width": 100,
+          "height": 5.667,
+          "fit": "cover"
+        }
+      ]
+    },
     "desktop": {
       "height": "1200px",
       "fixedWidth": null,
@@ -204,6 +289,52 @@ export const BLOCKS: BlockSpec[] = [
     "key": "tgbvc8",
     "name": "Clearing",
     "dark": false,
+    "large": {
+      "height": "100vh",
+      "fixedWidth": null,
+      "slots": [
+        {
+          "id": "Clearing-1",
+          "left": 15.457,
+          "top": 15.444,
+          "width": 53.691,
+          "height": 103.333,
+          "fit": "cover"
+        },
+        {
+          "id": "Clearing-2",
+          "left": 41.956,
+          "top": 35.222,
+          "width": 48.517,
+          "height": 97.444,
+          "fit": "cover"
+        },
+        {
+          "id": "Clearing-3",
+          "left": 0,
+          "top": 78.111,
+          "width": 100,
+          "height": 44.667,
+          "fit": "cover"
+        },
+        {
+          "id": "Clearing-4",
+          "left": 0,
+          "top": -11.444,
+          "width": 100,
+          "height": 74.333,
+          "fit": "cover"
+        },
+        {
+          "id": "Clearing-5",
+          "left": 0,
+          "top": -1.222,
+          "width": 100,
+          "height": 5.556,
+          "fit": "cover"
+        }
+      ]
+    },
     "desktop": {
       "height": "100vh",
       "fixedWidth": null,
@@ -301,6 +432,36 @@ export const BLOCKS: BlockSpec[] = [
     "key": "k5szjo",
     "name": "Panels",
     "dark": false,
+    "large": {
+      "height": "2740px",
+      "fixedWidth": null,
+      "slots": [
+        {
+          "id": "Panels-1",
+          "left": 0.631,
+          "top": -3.285,
+          "width": 98.738,
+          "height": 36.496,
+          "fit": "cover"
+        },
+        {
+          "id": "Panels-2",
+          "left": 0.631,
+          "top": 29.197,
+          "width": 98.738,
+          "height": 37.226,
+          "fit": "cover"
+        },
+        {
+          "id": "Panels-3",
+          "left": -3.028,
+          "top": 66.898,
+          "width": 102.397,
+          "height": 32.737,
+          "fit": "cover"
+        }
+      ]
+    },
     "desktop": {
       "height": "2065px",
       "fixedWidth": null,
@@ -332,7 +493,7 @@ export const BLOCKS: BlockSpec[] = [
       ]
     },
     "mobile": {
-      "height": "2562px",
+      "height": "calc(1975px + 144.48vw)",
       "fixedWidth": null,
       "slots": [
         {
@@ -366,6 +527,20 @@ export const BLOCKS: BlockSpec[] = [
     "key": "1htt17w",
     "name": "Totem",
     "dark": false,
+    "large": {
+      "height": "796px",
+      "fixedWidth": 1600,
+      "slots": [
+        {
+          "id": "Totem-1",
+          "left": 22.625,
+          "top": 1.633,
+          "width": 22.875,
+          "height": 96.734,
+          "fit": "fill"
+        }
+      ]
+    },
     "desktop": {
       "height": "1989px",
       "fixedWidth": 1600,
@@ -399,6 +574,28 @@ export const BLOCKS: BlockSpec[] = [
     "key": "12iimvw",
     "name": "Portal",
     "dark": false,
+    "large": {
+      "height": "1200px",
+      "fixedWidth": null,
+      "slots": [
+        {
+          "id": "Portal-1",
+          "left": -1.009,
+          "top": 2.167,
+          "width": 102.082,
+          "height": 95.667,
+          "fit": "cover"
+        },
+        {
+          "id": "Portal-2",
+          "left": 0,
+          "top": 94.333,
+          "width": 100,
+          "height": 5.667,
+          "fit": "cover"
+        }
+      ]
+    },
     "desktop": {
       "height": "1200px",
       "fixedWidth": null,
@@ -448,6 +645,60 @@ export const BLOCKS: BlockSpec[] = [
     "key": "mnfkb7",
     "name": "Grove",
     "dark": false,
+    "large": {
+      "height": "2046px",
+      "fixedWidth": 1600,
+      "slots": [
+        {
+          "id": "Grove-1",
+          "left": 21.875,
+          "top": 51.466,
+          "width": 5,
+          "height": 5.376,
+          "fit": "cover"
+        },
+        {
+          "id": "Grove-2",
+          "left": -0.438,
+          "top": 32.209,
+          "width": 49.688,
+          "height": 53.715,
+          "fit": "cover"
+        },
+        {
+          "id": "Grove-3",
+          "left": -5.438,
+          "top": 17.986,
+          "width": 59.625,
+          "height": 64.516,
+          "fit": "cover"
+        },
+        {
+          "id": "Grove-4",
+          "left": 50.5,
+          "top": 36.51,
+          "width": 48.438,
+          "height": 54.741,
+          "fit": "cover"
+        },
+        {
+          "id": "Grove-5",
+          "left": 72.25,
+          "top": 57.722,
+          "width": 4.875,
+          "height": 5.474,
+          "fit": "cover"
+        },
+        {
+          "id": "Grove-6",
+          "left": 50.5,
+          "top": 32.014,
+          "width": 48.438,
+          "height": 54.741,
+          "fit": "cover"
+        }
+      ]
+    },
     "desktop": {
       "height": "2696px",
       "fixedWidth": 1600,
@@ -561,6 +812,132 @@ export const BLOCKS: BlockSpec[] = [
     "key": "10ytyjo",
     "name": "Spread",
     "dark": false,
+    "large": {
+      "height": "2852px",
+      "fixedWidth": null,
+      "slots": [
+        {
+          "id": "Spread-1",
+          "left": 44.101,
+          "top": 22.3,
+          "width": 95.142,
+          "height": 61.431,
+          "fit": "cover"
+        },
+        {
+          "id": "Spread-2",
+          "left": -42.965,
+          "top": 37.553,
+          "width": 95.142,
+          "height": 61.431,
+          "fit": "cover"
+        },
+        {
+          "id": "Spread-3",
+          "left": 74.7,
+          "top": 45.898,
+          "width": 25.615,
+          "height": 17.356,
+          "fit": "cover"
+        },
+        {
+          "id": "Spread-4",
+          "left": 70.284,
+          "top": 63.429,
+          "width": 25.615,
+          "height": 17.356,
+          "fit": "cover"
+        },
+        {
+          "id": "Spread-5",
+          "left": 17.224,
+          "top": 34.853,
+          "width": 63.028,
+          "height": 57.468,
+          "fit": "cover"
+        },
+        {
+          "id": "Spread-6",
+          "left": -11.672,
+          "top": 57.644,
+          "width": 31.861,
+          "height": 21.003,
+          "fit": "fill"
+        },
+        {
+          "id": "Spread-7",
+          "left": -6.625,
+          "top": 75.175,
+          "width": 31.861,
+          "height": 21.003,
+          "fit": "fill"
+        },
+        {
+          "id": "Spread-8",
+          "left": 46.12,
+          "top": 58.626,
+          "width": 22.334,
+          "height": 15.042,
+          "fit": "cover"
+        },
+        {
+          "id": "Spread-9",
+          "left": 51.735,
+          "top": 76.157,
+          "width": 22.334,
+          "height": 15.042,
+          "fit": "cover"
+        },
+        {
+          "id": "Spread-10",
+          "left": 64.416,
+          "top": 80.084,
+          "width": 31.546,
+          "height": 24.018,
+          "fit": "cover"
+        },
+        {
+          "id": "Spread-11",
+          "left": -11.861,
+          "top": 85.729,
+          "width": 37.476,
+          "height": 23.562,
+          "fit": "cover"
+        },
+        {
+          "id": "Spread-12",
+          "left": 15.899,
+          "top": 72.265,
+          "width": 21.262,
+          "height": 17.216,
+          "fit": "cover"
+        },
+        {
+          "id": "Spread-13",
+          "left": 72.681,
+          "top": 89.797,
+          "width": 21.262,
+          "height": 17.216,
+          "fit": "cover"
+        },
+        {
+          "id": "Spread-14",
+          "left": 9.59,
+          "top": 40.708,
+          "width": 30.789,
+          "height": 21.003,
+          "fit": "cover"
+        },
+        {
+          "id": "Spread-15",
+          "left": 0,
+          "top": 95.582,
+          "width": 100,
+          "height": 4.453,
+          "fit": "cover"
+        }
+      ]
+    },
     "desktop": {
       "height": "3022px",
       "fixedWidth": null,
@@ -818,6 +1195,52 @@ export const BLOCKS: BlockSpec[] = [
     "key": "1csghqk",
     "name": "Nightfall",
     "dark": true,
+    "large": {
+      "height": "1250px",
+      "fixedWidth": null,
+      "slots": [
+        {
+          "id": "Nightfall-1",
+          "left": -18.991,
+          "top": -21.44,
+          "width": 145.931,
+          "height": 174.08,
+          "fit": "cover"
+        },
+        {
+          "id": "Nightfall-2",
+          "left": -56.53,
+          "top": 29.92,
+          "width": 139.685,
+          "height": 98.4,
+          "fit": "fill"
+        },
+        {
+          "id": "Nightfall-3",
+          "left": -42.776,
+          "top": 51.6,
+          "width": 132.618,
+          "height": 126.08,
+          "fit": "fill"
+        },
+        {
+          "id": "Nightfall-4",
+          "left": 0,
+          "top": 89.84,
+          "width": 100,
+          "height": 10.16,
+          "fit": "cover"
+        },
+        {
+          "id": "Nightfall-5",
+          "left": 0.063,
+          "top": -0.08,
+          "width": 99.937,
+          "height": 5.28,
+          "fit": "cover"
+        }
+      ]
+    },
     "desktop": {
       "height": "1250px",
       "fixedWidth": null,
@@ -915,6 +1338,28 @@ export const BLOCKS: BlockSpec[] = [
     "key": "kcykm",
     "name": "Duet",
     "dark": true,
+    "large": {
+      "height": "2590px",
+      "fixedWidth": null,
+      "slots": [
+        {
+          "id": "Duet-1",
+          "left": -1.577,
+          "top": 47.066,
+          "width": 53.312,
+          "height": 51.583,
+          "fit": "cover"
+        },
+        {
+          "id": "Duet-2",
+          "left": 43.344,
+          "top": 5.174,
+          "width": 56.782,
+          "height": 47.683,
+          "fit": "cover"
+        }
+      ]
+    },
     "desktop": {
       "height": "3164px",
       "fixedWidth": null,
@@ -964,6 +1409,11 @@ export const BLOCKS: BlockSpec[] = [
     "key": "pf7mlq",
     "name": "Band",
     "dark": false,
+    "large": {
+      "height": "261px",
+      "fixedWidth": 1625,
+      "slots": []
+    },
     "desktop": {
       "height": "261px",
       "fixedWidth": 1625,
@@ -979,6 +1429,36 @@ export const BLOCKS: BlockSpec[] = [
     "key": "1pk46w7",
     "name": "Finale",
     "dark": false,
+    "large": {
+      "height": "953px",
+      "fixedWidth": null,
+      "slots": [
+        {
+          "id": "Finale-1",
+          "left": 0.315,
+          "top": 45.435,
+          "width": 99.306,
+          "height": 57.083,
+          "fit": "cover"
+        },
+        {
+          "id": "Finale-2",
+          "left": -0.442,
+          "top": 0,
+          "width": 100.946,
+          "height": 88.038,
+          "fit": "cover"
+        },
+        {
+          "id": "Finale-3",
+          "left": 3.155,
+          "top": 0,
+          "width": 91.924,
+          "height": 71.249,
+          "fit": "cover"
+        }
+      ]
+    },
     "desktop": {
       "height": "953px",
       "fixedWidth": null,

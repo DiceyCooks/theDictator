@@ -8,9 +8,9 @@ import { LayeredBlock } from "@/components/sites/lilfrogeth-com-629a1bd8/shared/
  * Clone of https://lilfrogeth.com/ — structure and motion.
  *
  * A single long illustration scroll: a full-height hero with six marquee rows,
- * then eleven layered compositions, then credits, with three fixed overlays
- * above everything. Only the hero, nav and credits carry text, and only the
- * hero and nav animate.
+ * eleven layered compositions, three empty spacer blocks, then credits, with
+ * three fixed overlays above everything. Only the hero, nav and credits carry
+ * text, and only the hero and nav animate.
  *
  * Artwork is not vendored. Each layer is an ArtSlot holding the measured
  * position and proportions of the original, ready for your own art.
@@ -30,7 +30,19 @@ export default function Page() {
         <div aria-hidden="true" className="h-[220px] lf:hidden" />
 
         {BLOCKS.map((block) => (
-          <LayeredBlock key={block.key} block={block} />
+          <div key={block.key} className="contents">
+            <LayeredBlock block={block} />
+
+            {/* framer-1rvi7xe — an empty 355px spacer block that sits between
+                Panels and Totem. Desktop and large only; absent at mobile. */}
+            {block.key === "k5szjo" && (
+              <div
+                aria-hidden="true"
+                data-block="1rvi7xe"
+                className="hidden h-[355px] lf:block"
+              />
+            )}
+          </div>
         ))}
 
         <Credits />

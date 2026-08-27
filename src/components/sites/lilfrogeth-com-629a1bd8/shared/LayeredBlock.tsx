@@ -12,20 +12,24 @@ import { cn } from "@/lib/utils";
  * text — the composition *is* the content — and none of them animate. The only
  * motion on the page belongs to the hero and the nav.
  *
- * Desktop and mobile are genuinely different compositions rather than one layout
- * scaling, so both variants are rendered and switched at the 810px breakpoint.
- * Slots are percentage-positioned within their own variant's box.
+ * The target ships three genuinely different compositions per block rather than
+ * one layout that scales, so all three are rendered and switched in CSS:
+ *
+ *   large    >=1600px
+ *   desktop  810-1599px
+ *   mobile   <810px
+ *
+ * Within each variant the height is fixed. Slots are percentage-positioned
+ * against their own variant's box.
  *
  * Some blocks keep a fixed pixel width wider than the viewport and are clipped
- * by the page; those are centred here, matching the target.
+ * by the page rather than shrinking; those are centred here, as on the target.
  */
 function Variant({
   variant,
-  name,
   className,
 }: {
   variant: BlockVariant;
-  name: string;
   className: string;
 }) {
   return (
@@ -58,7 +62,6 @@ function Variant({
           />
         ))}
       </div>
-      <span className="sr-only">{name}</span>
     </div>
   );
 }
@@ -70,16 +73,12 @@ export function LayeredBlock({ block }: { block: BlockSpec }) {
       data-block={block.key}
       className={cn("relative w-full", block.dark && "bg-lf-ink")}
     >
+      <Variant variant={block.mobile} className="block lf:hidden" />
       <Variant
         variant={block.desktop}
-        name={block.name}
-        className="hidden lf:block"
+        className="hidden lf:block lflg:hidden"
       />
-      <Variant
-        variant={block.mobile}
-        name={block.name}
-        className="block lf:hidden"
-      />
+      <Variant variant={block.large} className="hidden lflg:block" />
     </section>
   );
 }
