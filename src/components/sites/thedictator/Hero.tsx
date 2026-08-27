@@ -80,32 +80,31 @@ function GroundHard() {
 }
 
 /**
- * Softened ground. Three things working together:
+ * Softened ground. One opaque mass with a brushed edge, plus a short veil to
+ * ease the last of the transition.
  *
- *   1. a long veil fading transparent -> ink, so the transition dissolves over
- *      ~39% of the hero rather than resolving at a line
- *   2. the main mass, its top edge roughened by a turbulence displacement so it
- *      reads as a brushed/torn edge instead of a curve
- *   3. a lighter stray stroke above the mass, which is what stops the edge
- *      looking like a single deliberate shape
+ * An earlier version stacked a second stroke at 50% opacity above the mass to
+ * suggest stray brushwork. It read as a washed-out translucent band, not as
+ * paint, so it is gone — the displaced edge alone carries the texture.
  *
- * The veil alone reads as a plain gradient; the shape alone reads as a hard cut.
- * The combination is what makes it feel painted.
- *
- * Both paths are drawn far below the viewBox bottom (y 520 in a 320 box) so the
- * displacement can never lift the fill off the hero's bottom edge and reopen the
- * seam — the filter can only disturb the top edge.
+ * OVERHANG RULE. The displacement moves the path horizontally as well as
+ * vertically (xChannelSelector, scale/2 either way), so a path drawn edge to
+ * edge gets pulled INWARD at the left and right and leaves uncovered corners.
+ * The path therefore starts at x -80 and ends at x 1520, well outside the
+ * 0-1440 viewBox, and its bottom sits at y 420 in a 220-tall box. The filter can
+ * then only disturb the top edge; the sides and bottom stay solid and the seam
+ * cannot reopen.
  */
 function GroundSoft() {
   return (
     <div
       className="pointer-events-none absolute z-[5]"
-      style={{ left: 0, top: "62%", width: "100%", height: "39%" }}
+      style={{ left: 0, top: "76%", width: "100%", height: "25%" }}
     >
       <div className="lf-ground-veil absolute inset-0" />
 
       <svg
-        viewBox="0 0 1440 320"
+        viewBox="0 0 1440 220"
         preserveAspectRatio="none"
         className="absolute inset-0 h-full w-full"
         aria-hidden="true"
@@ -113,15 +112,15 @@ function GroundSoft() {
         <defs>
           <filter
             id="lf-brush"
-            x="-10%"
-            y="-30%"
-            width="120%"
-            height="160%"
+            x="-15%"
+            y="-40%"
+            width="130%"
+            height="180%"
             colorInterpolationFilters="sRGB"
           >
             <feTurbulence
               type="fractalNoise"
-              baseFrequency="0.005 0.019"
+              baseFrequency="0.004 0.022"
               numOctaves="4"
               seed="11"
               result="noise"
@@ -129,23 +128,16 @@ function GroundSoft() {
             <feDisplacementMap
               in="SourceGraphic"
               in2="noise"
-              scale="36"
+              scale="26"
               xChannelSelector="R"
               yChannelSelector="G"
             />
           </filter>
         </defs>
 
-        <g filter="url(#lf-brush)" opacity="0.5">
-          <path
-            d="M0,520 L0,150 C280,112 540,146 760,140 C980,134 1210,158 1440,124 L1440,520 Z"
-            fill="var(--lf-ink)"
-          />
-        </g>
-
         <g filter="url(#lf-brush)">
           <path
-            d="M0,520 L0,186 C240,214 470,232 720,238 C970,232 1200,214 1440,186 L1440,520 Z"
+            d="M-80,420 L-80,112 C240,142 470,162 720,168 C970,162 1200,142 1520,112 L1520,420 Z"
             fill="var(--lf-ink)"
           />
         </g>
