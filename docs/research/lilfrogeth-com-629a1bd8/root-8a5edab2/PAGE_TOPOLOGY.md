@@ -4,8 +4,8 @@
 - **site-key:** `lilfrogeth-com-629a1bd8`
 - **page-key:** `root-8a5edab2`
 - **Destination route:** `/` (`src/app/page.tsx` — fresh-template root clone)
-- **Captured at:** 1440×900 viewport
-- **Total scroll height:** 20,168px
+- **Captured at:** 1440×900 viewport (heights in the table below are from that width)
+- **Total scroll height:** 20,203px (clean load at 1440; see RESPONSIVE.md for other widths)
 
 ## Platform
 
@@ -16,7 +16,9 @@ derived and carry no semantics — do **not** mirror them. All assets are served
 Consequences for the clone:
 - No authored stylesheet is readable (`document.styleSheets` exposes no keyframes). All motion is
   JS-driven from the Framer runtime, so behavior must be captured as **state diffs**, not read from CSS.
-- Every section carries an entrance animation gated on viewport visibility.
+- Framer gates the hero's animations on visibility, so a backgrounded tab returns pre-animation
+  values. Note this does **not** mean sections animate: measured, the blocks are entirely static
+  and only the hero and nav move. See BEHAVIORS.md.
 
 ## Scroll container
 
@@ -30,11 +32,11 @@ children are the page blocks below.
 
 | # | class | top | height | imgs | svgs | working name |
 |---|---|---|---|---|---|---|
-| 0 | `framer-ab08lb` | 0 | 900 | 4 | 16 | **Hero** — marquee stack + frog |
-| 11 | `framer-1oryf6n` | 900 | 100 | 0 | 0 | Spacer (hidden at some breakpoints) |
-| 12 | `framer-1h5f3tx` | 1000 | 220 | 0 | 0 | Spacer (hidden at some breakpoints) |
+| 0 | `framer-ab08lb` | 0 | 100vh | 4 | 16 | **Hero** — marquee stack + figure |
+| 11 | `framer-1oryf6n` | — | 100 | 0 | 0 | Spacer — **mobile-only** (<810px) |
+| 12 | `framer-1h5f3tx` | — | 220 | 0 | 0 | Spacer — **mobile-only** (<810px) |
 | 1 | `framer-18hopws` | 1220 | 1200 | 7 | 0 | Panel A |
-| 2 | `framer-tgbvc8` | 2420 | 900 | 6 | 0 | Panel B |
+| 2 | `framer-tgbvc8` | 2420 | 100vh | 6 | 0 | Panel B — also viewport-height |
 | 3 | `framer-k5szjo` | 3320 | 2065 | 3 | 0 | Tall panel C |
 | 4 | `framer-1htt17w` | 5385 | 1989 | 1 | 2 | Tall panel D |
 | 5 | `framer-12iimvw` | 7374 | 1200 | 2 | 0 | Panel E |
@@ -46,8 +48,11 @@ children are the page blocks below.
 | 13 | `framer-1pk46w7` | 18967 | 953 | 3 | 0 | Panel K |
 | 14 | `framer-fhalzc` | 19920 | 248 | 0 | 0 | **Credits / footer** |
 
-> Note blocks 11 and 12 are spacers that sit between the hero and block 1 in *visual* order despite
-> being late in DOM order. Both carry `hidden-1rml4m2 hidden-174vl6w` — they are breakpoint-gated.
+> **Corrected.** Blocks 11 and 12 are spacers between the hero and block 1. They are
+> **mobile-only** — absent from the desktop DOM entirely, rendering at 100px and 220px below the
+> 810px breakpoint. An earlier revision of this file called them desktop-only; that reading came
+> from a tab that had loaded narrow and then been resized wide, leaving stale mobile nodes behind.
+> See `RESPONSIVE.md`.
 
 ## Fixed overlays
 
@@ -55,32 +60,34 @@ Three elements are `position: fixed` and sit above the scrolling content:
 
 | class | role |
 |---|---|
-| `framer-1i93ave-container` | overlay 1 |
-| `framer-jaq4ea-container` | overlay 2 |
-| `framer-1t24yw8` | overlay 3 |
+| `framer-1i93ave-container` | full-viewport grain texture, `pointer-events: none`, z 10 |
+| `framer-jaq4ea-container` | top nav — 717×51, centred at top 10px, marquee + 133×17 logotype, z 10 |
+| `framer-1t24yw8` | bottom info bar — full width × 64px, z 9 |
 
 These must be siblings of the scroll content in the clone, not children of any section.
 
 ## Hero anatomy (block 0)
 
-Three stacked layers inside a 900px-tall `overflow: hidden` box:
+Three stacked layers inside a **100vh** `overflow: hidden` box (it tracks viewport height at every
+breakpoint — the 900px seen at 1440 is simply that viewport's height, not a fixed value):
 
 1. **Background plate** — `framer-wzyyrq`, absolutely positioned and inset negative on all sides
    (`top: -436px; left/right: -615px; bottom: -530px`), sized 2655×1866, `transform: scale(1.5)`,
    `object-fit: cover`. Resting opacity `0.001` → animates up on load.
 2. **Marquee stack** — `framer-gw8nh1`, `position: absolute; top: 60px`, flex column, centred.
-   Contains **five horizontal marquee rows** at heights `190 / 186 / 190 / 186 / 190`px. Each row is a
+   Contains **six horizontal marquee rows** with heights alternating `190 / 186`px. Each row is a
    `-container` div wrapping a `<section>` with `padding: 10px; display: flex; align-items: center;
-   overflow: hidden`. Rows read `opacity: 0` before their entrance animation fires.
-   Row text is the wordmark repeated horizontally.
+   overflow: hidden`, and the animated element is the `<ul>` inside it.
+   Row content is the wordmark — **SVG vector artwork**, not typeset text — repeated horizontally.
+   Only the background plate fades in; the rows themselves do not.
 3. **Frog figure** — PNG layered above the marquee rows, centred.
 
 Marquee direction alternates by row (the 190/186 height alternation tracks the two row variants).
 
-## Marquee content elsewhere on the page
+## The other marquee is the nav
 
-Page text shows each label duplicated, which is the standard seamless-loop pattern (content rendered
-twice, translated -50%):
+These labels are **not** per-section content — they live in the fixed top nav overlay
+(`framer-jaq4ea-container`). Each is duplicated for the seamless loop:
 
 `ESSENTIAL` · `LINKS` · `GRAB THE` · `CONTRACT` · `EXPLORE` · `TOKENOMICS`
 

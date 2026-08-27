@@ -2,7 +2,11 @@ import { Marquee } from "@/components/sites/lilfrogeth-com-629a1bd8/shared/Marqu
 import { ArtSlot } from "@/components/sites/lilfrogeth-com-629a1bd8/shared/ArtSlot";
 
 /**
- * Hero — block 0 (`framer-ab08lb`), 900px tall, overflow hidden.
+ * Hero — block 0 (`framer-ab08lb`), full viewport height, overflow hidden.
+ *
+ * Measured at 100vh across every breakpoint (957 at vh 957, 1024 at vh 1024,
+ * 844 at vh 844), so it is sized in vh rather than the fixed px it first
+ * appeared to use.
  *
  * Three stacked layers:
  *   1. background plate, inset negative and scaled 1.5x, fading 0.001 -> 1 over 800ms
@@ -30,7 +34,7 @@ function Wordmark() {
 
 export function Hero() {
   return (
-    <section className="relative z-[1] h-[900px] w-full overflow-hidden bg-lf-ink">
+    <section className="relative z-[1] h-screen w-full overflow-hidden bg-lf-ink">
       {/* Layer 1 — background plate. Negative inset on all sides plus scale(1.5)
           keeps the plate cropped well beyond the viewport so it can move without
           ever exposing an edge. */}

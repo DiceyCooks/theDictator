@@ -92,28 +92,35 @@ Three `position: fixed` elements sit above all scrolling content:
 In the clone these must be siblings of the scroll content, never nested inside a section, or
 transformed ancestors will break `position: fixed`.
 
-## Section entrance animations
+## Section entrance animations — THERE ARE NONE
 
-Every block below the hero carries a visibility-gated entrance. Mechanism is Framer's runtime
-IntersectionObserver. Per-section capture procedure:
+An earlier revision of this file asserted that every block below the hero carried a
+visibility-gated entrance. **That was wrong.** Measured directly:
 
-1. Front the tab.
-2. Scroll so the section is just below the fold; capture computed styles → **state A**.
-3. Scroll it into view; wait for settle; capture again → **state B**.
-4. The diff is the specification. Record trigger threshold, both value sets, duration and easing.
+- `document.getAnimations()` filtered to each block returns `[]`.
+- Blocks report `opacity: 1` and `transform: none` at every scroll position.
+- The document only ever holds **8** animations, and all 8 belong to the hero and nav:
+  6 hero marquee rows + 1 hero fade + 1 nav marquee.
+
+The blocks are static. The page's entire motion budget is the hero, the nav marquee, and Lenis.
+
+The original claim came from assuming Framer's usual scroll-reveal pattern rather than measuring
+it, and it survived a first pass because a backgrounded tab returns `opacity: 0` on the hero,
+which looked like evidence of gating everywhere.
 
 ## Responsive
 
-Blocks 11 and 12 (the 100px and 220px spacers between hero and block 1) carry
-`hidden-1rml4m2 hidden-174vl6w`, Framer's breakpoint-visibility classes — they are shown at some
-widths and hidden at others. Resolve the exact widths by sweeping 1440 / 768 / 390 and observing
-which of the two disappears at which width.
+Resolved — see `RESPONSIVE.md`. Single breakpoint at **810px**. The two spacers are
+**mobile-only**: absent from the desktop DOM entirely, rendering at 100px and 220px below 810.
+
+Measure each breakpoint on a **clean page load**. Resizing alone leaves stale nodes from the
+previous variant in the DOM and yields contradictory readings.
 
 ## Still to capture
 
 - [x] Per-row marquee speed and direction (6 hero rows) — 35.0 px/s, alternating, linear, infinite
-- [ ] Entrance timing/easing per block (14 blocks below hero)
-- [ ] Identity and behavior of the 3 fixed overlays
+- [x] Entrance timing/easing per block — **none exist**; blocks are static
+- [x] Identity and behavior of the 3 fixed overlays — see RESPONSIVE.md
 - [ ] Hover states across links, buttons and credit rows
-- [ ] Breakpoints at 768 and 390, and which blocks restructure
+- [x] Breakpoints — single switch at **810px**; see RESPONSIVE.md
 - [x] Wordmark is **SVG vector artwork** (`<path>`), not typeset text — no font size applies
