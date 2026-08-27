@@ -348,3 +348,20 @@ html.lenis body {
     ),
     var(--lf-sky-high);
 }
+
+/* Ground veil.
+   A long fade from transparent down to the next panel's colour, so the hero
+   dissolves into it instead of meeting it at a line. The painted shape sits on
+   top of this and supplies the texture; the veil alone would read as a plain
+   gradient, and the shape alone reads as a hard edge — the pair is what sells
+   the transition. */
+.lf-ground-veil {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in oklch, var(--lf-ink) 22%, transparent) 34%,
+    color-mix(in oklch, var(--lf-ink) 58%, transparent) 58%,
+    color-mix(in oklch, var(--lf-ink) 88%, transparent) 78%,
+    var(--lf-ink) 94%
+  );
+}

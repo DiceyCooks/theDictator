@@ -45,6 +45,115 @@ function Wordmark() {
   );
 }
 
+/**
+ * Which ground treatment renders. Flip to "hard" to get the original single
+ * clean curve back — it is kept verbatim in GroundHard below.
+ */
+const GROUND_STYLE: "soft" | "hard" = "soft";
+
+/**
+ * Original ground: one clean arc, filled with the next panel's colour.
+ *
+ * Kept because it is the most reliable option — a single opaque shape can never
+ * leave a gap at the seam. Its weakness is that the edge is a hard mathematical
+ * curve, which reads as forced against painterly artwork.
+ */
+function GroundHard() {
+  return (
+    <div
+      className="pointer-events-none absolute z-[5]"
+      style={{ left: 0, top: "80%", width: "100%", height: "21%" }}
+    >
+      <svg
+        viewBox="0 0 1440 220"
+        preserveAspectRatio="none"
+        className="h-full w-full"
+        aria-hidden="true"
+      >
+        <path
+          d="M0,220 L0,104 C240,138 470,160 720,166 C970,160 1200,138 1440,104 L1440,220 Z"
+          fill="var(--lf-ink)"
+        />
+      </svg>
+    </div>
+  );
+}
+
+/**
+ * Softened ground. Three things working together:
+ *
+ *   1. a long veil fading transparent -> ink, so the transition dissolves over
+ *      ~39% of the hero rather than resolving at a line
+ *   2. the main mass, its top edge roughened by a turbulence displacement so it
+ *      reads as a brushed/torn edge instead of a curve
+ *   3. a lighter stray stroke above the mass, which is what stops the edge
+ *      looking like a single deliberate shape
+ *
+ * The veil alone reads as a plain gradient; the shape alone reads as a hard cut.
+ * The combination is what makes it feel painted.
+ *
+ * Both paths are drawn far below the viewBox bottom (y 520 in a 320 box) so the
+ * displacement can never lift the fill off the hero's bottom edge and reopen the
+ * seam — the filter can only disturb the top edge.
+ */
+function GroundSoft() {
+  return (
+    <div
+      className="pointer-events-none absolute z-[5]"
+      style={{ left: 0, top: "62%", width: "100%", height: "39%" }}
+    >
+      <div className="lf-ground-veil absolute inset-0" />
+
+      <svg
+        viewBox="0 0 1440 320"
+        preserveAspectRatio="none"
+        className="absolute inset-0 h-full w-full"
+        aria-hidden="true"
+      >
+        <defs>
+          <filter
+            id="lf-brush"
+            x="-10%"
+            y="-30%"
+            width="120%"
+            height="160%"
+            colorInterpolationFilters="sRGB"
+          >
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.005 0.019"
+              numOctaves="4"
+              seed="11"
+              result="noise"
+            />
+            <feDisplacementMap
+              in="SourceGraphic"
+              in2="noise"
+              scale="36"
+              xChannelSelector="R"
+              yChannelSelector="G"
+            />
+          </filter>
+        </defs>
+
+        <g filter="url(#lf-brush)" opacity="0.5">
+          <path
+            d="M0,520 L0,150 C280,112 540,146 760,140 C980,134 1210,158 1440,124 L1440,520 Z"
+            fill="var(--lf-ink)"
+          />
+        </g>
+
+        <g filter="url(#lf-brush)">
+          <path
+            d="M0,520 L0,186 C240,214 470,232 720,238 C970,232 1200,214 1440,186 L1440,520 Z"
+            fill="var(--lf-ink)"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
 export function Hero() {
   return (
     <section className="relative z-[1] h-screen w-full overflow-hidden bg-lf-ink">
@@ -98,22 +207,7 @@ export function Hero() {
           while the shape closes in around it.
           Deliberately above the figure (z-5) so it crops the legs: occlusion is
           what makes this read as ground rather than a stripe across the page. */}
-      <div
-        className="pointer-events-none absolute z-[5]"
-        style={{ left: 0, top: "80%", width: "100%", height: "21%" }}
-      >
-        <svg
-          viewBox="0 0 1440 220"
-          preserveAspectRatio="none"
-          className="h-full w-full"
-          aria-hidden="true"
-        >
-          <path
-            d="M0,220 L0,104 C240,138 470,160 720,166 C970,160 1200,138 1440,104 L1440,220 Z"
-            fill="var(--lf-ink)"
-          />
-        </svg>
-      </div>
+      {GROUND_STYLE === "hard" ? <GroundHard /> : <GroundSoft />}
 
       {/* 4 — figure. object-fit contain, sitting slightly left of centre.
           The source is 941x1672 (aspect 0.563), taller than the box, so it fills

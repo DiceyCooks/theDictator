@@ -18,34 +18,38 @@ import { cn } from "@/lib/utils";
  * was reproduced and then deliberately dropped — a nav that moves is hard to
  * read and hard to click.
  *
- * Type here is --lf-ui (gold), not --lf-type (white). These overlays travel over
- * the black blocks below the hero, and gold is the one warm accent in the
- * palette — it separates the nav from the display type instead of competing
- * with it, and it reads on both the night sky and the black blocks.
+ * Labels are this project's own (About / Tokenomics / Socials), not the
+ * target's two-line phrases, and the logotype placeholder is now the $CRASH
+ * ticker set in Luckiest Guy.
+ *
+ * Type here is --lf-ui, which is white. These overlays travel over the black sky
+ * AND the black blocks below it, so the colour has to read on both.
  */
 
 /** Scroll distance before the glass bar materialises, in px. */
 const GLASS_THRESHOLD = 80;
 
-/**
- * Nav labels. Each is a two-word phrase split across two lines, which is how the
- * target sets them: "Essential links", "Grab the contract", "Explore tokenomics".
- */
-const NAV_GROUPS = [
-  { top: "Essential", bottom: "Links", href: "#links" },
-  { top: "Grab the", bottom: "Contract", href: "#contract" },
-  { top: "Explore", bottom: "Tokenomics", href: "#tokenomics" },
+/** Ticker, set as the logo. */
+const TICKER = "$CRASH";
+
+const NAV_LINKS = [
+  { label: "About", href: "#about" },
+  { label: "Tokenomics", href: "#tokenomics" },
+  { label: "Socials", href: "#socials" },
 ] as const;
 
-/** Stand-in for the target's 133x17 logotype, which is vector artwork. */
+/**
+ * Ticker logo. Luckiest Guy, loaded in the root layout as --font-display.
+ * Slight positive tracking because the face sets tight at small sizes.
+ */
 function NavMark() {
   return (
-    <span
-      aria-label="Logotype placeholder"
-      className="inline-flex h-[17px] w-[110px] shrink-0 items-center justify-center border border-dashed border-[color-mix(in_oklch,var(--lf-ui)_40%,transparent)] text-[9px] uppercase tracking-[-0.02em] text-[color-mix(in_oklch,var(--lf-ui)_70%,transparent)]"
+    <a
+      href="#top"
+      className="shrink-0 font-[family-name:var(--font-display)] text-[22px] leading-none tracking-[0.01em] text-lf-ui transition-opacity duration-200 hover:opacity-70 sm:text-[26px]"
     >
-      Logotype
-    </span>
+      {TICKER}
+    </a>
   );
 }
 
@@ -110,14 +114,13 @@ export function Overlays() {
       >
         <NavMark />
 
-        {NAV_GROUPS.map((group) => (
+        {NAV_LINKS.map((link) => (
           <a
-            key={group.top}
-            href={group.href}
-            className="shrink-0 font-[family-name:var(--font-inter)] text-[13px] font-semibold uppercase leading-[1.15] tracking-[-0.025em] text-lf-ui transition-opacity duration-200 hover:opacity-60 sm:text-[14px]"
+            key={link.label}
+            href={link.href}
+            className="shrink-0 whitespace-nowrap font-[family-name:var(--font-inter)] text-[13px] font-semibold uppercase leading-[1.15] tracking-[-0.025em] text-lf-ui transition-opacity duration-200 hover:opacity-60 sm:text-[14px]"
           >
-            <span className="block whitespace-nowrap">{group.top}</span>
-            <span className="block whitespace-nowrap">{group.bottom}</span>
+            {link.label}
           </a>
         ))}
       </nav>
