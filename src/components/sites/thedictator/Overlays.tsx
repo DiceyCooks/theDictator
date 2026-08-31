@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { Grain } from "@/components/sites/thedictator/shared/Grain";
 
 /**
  * The three fixed overlays that sit above the scrolling page.
@@ -123,11 +124,9 @@ export function Overlays() {
         style={{ height: GLASS_THRESHOLD }}
       />
 
-      {/* Grain — purely decorative, never intercepts pointer events */}
-      <div
-        aria-hidden="true"
-        className="lf-grain pointer-events-none fixed inset-0 z-10 opacity-[0.15] mix-blend-overlay"
-      />
+      {/* Grain — animated now, not a printed texture. Decorative only, never
+          intercepts pointer events. */}
+      <Grain opacity={0.16} className="z-10 mix-blend-overlay" />
 
       {/* Top nav.
           At the top of the page the labels float free with no container. Past
