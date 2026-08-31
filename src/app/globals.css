@@ -158,6 +158,14 @@
   /* Night sky. Cool near-black, lifting very slightly toward the horizon so the
      field is not a flat fill. Kept dark enough that white clouds and white
      display type both carry. */
+  /* Navy scale, sampled from the character's dress uniform so the section
+     palette comes out of the artwork rather than being picked beside it.
+     The About section opens on --lf-ink to meet the hero's ground seamlessly,
+     then pivots into navy as it scrolls. */
+  --lf-navy-900: oklch(0.115 0.035 266);
+  --lf-navy-700: oklch(0.215 0.058 266);
+  --lf-navy-500: oklch(0.33 0.072 264);
+
   --lf-sky-high: oklch(0.045 0.012 262);
   --lf-sky-mid: oklch(0.105 0.018 256);
   --lf-sky-low: oklch(0.185 0.024 250);
@@ -168,6 +176,9 @@
 @theme inline {
 
   --color-lf-ink: var(--lf-ink);
+  --color-lf-navy-900: var(--lf-navy-900);
+  --color-lf-navy-700: var(--lf-navy-700);
+  --color-lf-navy-500: var(--lf-navy-500);
   --color-lf-type: var(--lf-type);
   --color-lf-ui: var(--lf-ui);
   --color-lf-paper: var(--lf-paper);
@@ -341,5 +352,21 @@ html.lenis body {
     color-mix(in oklch, var(--lf-ink) 58%, transparent) 58%,
     color-mix(in oklch, var(--lf-ink) 88%, transparent) 78%,
     var(--lf-ink) 94%
+  );
+}
+
+/* About section ground.
+   Opens on --lf-ink so it meets the hero's ground shape with no seam — the
+   hero's shape is filled with the SAME colour as whatever sits below it, and
+   that is the whole reason the join disappears. Only after that handoff does
+   the field pivot into navy. */
+.lf-about-ground {
+  background: linear-gradient(
+    to bottom,
+    var(--lf-ink) 0%,
+    var(--lf-ink) 8%,
+    var(--lf-navy-900) 30%,
+    var(--lf-navy-700) 62%,
+    var(--lf-navy-900) 100%
   );
 }

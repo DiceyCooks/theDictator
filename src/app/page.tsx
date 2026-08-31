@@ -1,3 +1,4 @@
+import { About } from "@/components/sites/thedictator/About";
 import { Hero } from "@/components/sites/thedictator/Hero";
 import { Overlays } from "@/components/sites/thedictator/Overlays";
 
@@ -21,6 +22,7 @@ export default function Page() {
       <Overlays />
       <main className="overflow-x-hidden bg-lf-ink">
         <Hero />
+        <About />
       </main>
     </>
   );
