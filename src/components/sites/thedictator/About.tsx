@@ -1,25 +1,29 @@
 "use client";
 
 import Image from "next/image";
-import { useScrollProgress } from "@/components/sites/thedictator/shared/useScrollProgress";
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Reveal } from "@/components/sites/thedictator/shared/Reveal";
+import {
+  SpotlightPortrait,
+  SpotlightScene,
+} from "@/components/sites/thedictator/SpotlightScene";
 
 /**
- * About — "Who is CRASH?"
+ * About — "Who is $CRASH?"
  *
- * Opens on --lf-ink so it meets the hero's ground with no seam, then pivots
- * into navy. The hero's ground shape is filled with the colour of whatever sits
- * below it, so this section's first 8% MUST stay --lf-ink or the join reappears.
+ * Opens on --lf-ink so it meets the hero's ground with no seam, then pivots into
+ * navy. The hero's ground shape is filled with the colour of whatever sits below
+ * it, so this section's first 8% MUST stay --lf-ink or the join reappears.
  *
- * Three beats:
- *   1. the question, set large
- *   2. who he is — original pfp beside a blurb, then the record
- *   3. the turn — the original pfp becomes the dictator, scroll-linked
+ * Beats: the spotlight finds the headline and then him, the record, then the
+ * turn where the original pfp becomes the dictator.
  *
- * COPY AND FIGURES BELOW ARE PLACEHOLDERS. Nothing here states a real trade or
- * result; every slot is bracketed so it is obvious what still needs writing.
+ * ALL COPY AND FIGURES ARE PLACEHOLDERS. Nothing states a real trade or result;
+ * every slot is bracketed so it is obvious what still needs writing.
  */
 
-/** Swap for the real record. Left bracketed so nothing reads as a real claim. */
 const FEATS = [
   { label: "[ Metric ]", value: "[ — ]", note: "[ one line of context ]" },
   { label: "[ Metric ]", value: "[ — ]", note: "[ one line of context ]" },
@@ -27,64 +31,86 @@ const FEATS = [
 ] as const;
 
 /**
- * The turn. Two portraits crossfaded on scroll: the original on the way in, the
- * dictator on the way out, with a short overlap where both are present.
+ * The turn. Two identically-framed portraits crossfaded on scroll.
+ *
+ * Pinned and scrubbed through GSAP rather than a hand-rolled rAF loop. Lenis
+ * drives GSAP's ticker, so ScrollTrigger and the scroll position share one
+ * clock; a private rAF loop alongside it drifts and makes scrubbed values
+ * jitter. Pinning also gives the moment dedicated travel, so it holds in view
+ * while it changes instead of flashing past.
  */
 function Transformation() {
-  // A tall track with a sticky child, read in "pinned" mode. Progress then runs
-  // a clean 0 -> 1 across the track's overflow no matter where it sits in the
-  // page. An earlier version measured the element's pass by the viewport
-  // instead, which never completed: it is a short element low in the section,
-  // so there was not enough page beneath it left to scroll.
-  const { ref, progress } = useScrollProgress<HTMLDivElement>("pinned");
+  const wrap = useRef<HTMLDivElement>(null);
+  const before = useRef<HTMLDivElement>(null);
+  const after = useRef<HTMLDivElement>(null);
 
-  // Hold at each end, change through the middle.
-  const t = Math.min(1, Math.max(0, (progress - 0.2) / 0.55));
-  const ease = t * t * (3 - 2 * t);
+  useLayoutEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const ctx = gsap.context(() => {
+      gsap.set(after.current, { opacity: 0, scale: 0.96 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: wrap.current,
+          start: "top top",
+          end: "+=140%",
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+        },
+      });
+
+      // Hold, change, hold — the pauses either side are what make it read as a
+      // deliberate beat rather than a crossfade that happens to be on scroll.
+      tl.to({}, { duration: 0.35 })
+        .to(before.current, { opacity: 0, duration: 1 }, ">")
+        .to(after.current, { opacity: 1, scale: 1, duration: 1 }, "<")
+        .to({}, { duration: 0.35 });
+    }, wrap);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <div ref={ref} className="relative h-[240vh] w-full">
-      <div className="sticky top-0 flex h-screen flex-col items-center justify-center gap-8">
+    <div
+      ref={wrap}
+      className="flex h-screen w-full flex-col items-center justify-center gap-8"
+    >
+      <div className="relative aspect-square w-full max-w-[min(420px,58vh)]">
         <div
-          className="relative aspect-square w-full max-w-[min(420px,62vh)]"
-          data-transform-stack
+          ref={before}
+          className="absolute inset-0 overflow-hidden rounded-2xl"
         >
-          {/* Before — the original pfp */}
-          <div
-            className="absolute inset-0 overflow-hidden rounded-2xl"
-            style={{ opacity: 1 - ease }}
-          >
-            <Image
-              src="/sites/thedictator/images/crash-pfp.jpg"
-              alt="$CRASH, before"
-              fill
-              sizes="(max-width: 810px) 80vw, 420px"
-              className="object-cover"
-            />
-          </div>
-
-          {/* After — the dictator. Both frames are 1:1 and cropped the same
-              way, so this reads as one character changing rather than a cut
-              between two different shots. */}
-          <div
-            className="absolute inset-0 overflow-hidden rounded-2xl"
-            style={{ opacity: ease, transform: `scale(${0.96 + ease * 0.04})` }}
-          >
-            <Image
-              src="/sites/thedictator/images/dictator-portrait.png"
-              alt="THE DICTATOR"
-              fill
-              sizes="(max-width: 810px) 80vw, 420px"
-              className="object-cover"
-            />
-          </div>
+          <Image
+            src="/sites/thedictator/images/crash-pfp.jpg"
+            alt="$CRASH, before"
+            fill
+            sizes="(max-width: 810px) 80vw, 420px"
+            className="object-cover"
+          />
         </div>
 
-        <p className="max-w-[46ch] px-6 text-center font-[family-name:var(--font-inter)] text-[15px] leading-relaxed text-white/60">
-          [ Placeholder — a few lines on the dictator meme: where it came from,
-          why it stuck, and what it has to do with $CRASH. ]
-        </p>
+        <div
+          ref={after}
+          className="absolute inset-0 overflow-hidden rounded-2xl"
+        >
+          <Image
+            src="/sites/thedictator/images/dictator-portrait.png"
+            alt="THE DICTATOR"
+            fill
+            sizes="(max-width: 810px) 80vw, 420px"
+            className="object-cover"
+          />
+        </div>
       </div>
+
+      <p className="max-w-[46ch] px-6 text-center font-[family-name:var(--font-inter)] text-[15px] leading-relaxed text-white/60">
+        [ Placeholder — a few lines on the dictator meme: where it came from, why
+        it stuck, and what it has to do with $CRASH. ]
+      </p>
     </div>
   );
 }
@@ -93,49 +119,22 @@ export function About() {
   return (
     <section
       id="about"
-      // scroll-mt clears the fixed nav when the #about anchor is jumped to,
-      // otherwise the heading lands underneath it.
-      className="lf-about-ground relative w-full scroll-mt-[72px] overflow-hidden"
+      className="lf-about-ground relative w-full scroll-mt-[72px]"
     >
-      <div className="mx-auto flex max-w-[1100px] flex-col items-center gap-24 px-6 pb-40 pt-32 sm:gap-32 sm:pt-48">
-        <h2 className="text-center font-[family-name:var(--font-inter)] text-[clamp(2.75rem,9vw,7rem)] font-black uppercase leading-[0.86] tracking-[-0.045em] text-lf-type">
-          Who is
-          <span className="ml-[0.18em] font-[family-name:var(--font-display)] font-normal tracking-[0.01em]">
-            $CRASH
-          </span>
-          ?
-        </h2>
-
-        <div className="grid w-full items-center gap-12 sm:grid-cols-[minmax(0,320px)_1fr] sm:gap-16">
-          {/* Original pfp */}
-          <div className="relative mx-auto aspect-square w-full max-w-[320px] overflow-hidden rounded-2xl">
-            <Image
-              src="/sites/thedictator/images/crash-pfp.jpg"
-              alt="$CRASH"
-              fill
-              sizes="(max-width: 810px) 80vw, 320px"
-              className="object-cover"
-            />
-          </div>
-
-          <div className="flex flex-col gap-5">
-            <p className="font-[family-name:var(--font-inter)] text-[clamp(1rem,1.6vw,1.1875rem)] leading-relaxed text-white/80">
-              [ Placeholder — two or three sentences introducing CRASH. Who he
-              is, where he came from, why anyone follows him. ]
-            </p>
-            <p className="font-[family-name:var(--font-inter)] text-[15px] leading-relaxed text-white/55">
-              [ Placeholder — a second, shorter beat. Tone-setting rather than
-              detail. ]
-            </p>
-          </div>
-        </div>
+      <div className="mx-auto flex max-w-[1100px] flex-col items-center gap-28 px-6 pb-32 pt-32 sm:gap-36 sm:pt-48">
+        <SpotlightScene>
+          <SpotlightPortrait />
+        </SpotlightScene>
 
         {/* The record */}
         <div className="w-full">
-          <p className="mb-8 text-center font-[family-name:var(--font-inter)] text-[11px] font-bold uppercase tracking-[0.18em] text-white/40">
-            The record
-          </p>
-          <div className="grid gap-4 sm:grid-cols-3 sm:gap-5">
+          <Reveal>
+            <p className="mb-8 text-center font-[family-name:var(--font-inter)] text-[11px] font-bold uppercase tracking-[0.18em] text-white/40">
+              The record
+            </p>
+          </Reveal>
+
+          <Reveal stagger={0.12} className="grid gap-4 sm:grid-cols-3 sm:gap-5">
             {FEATS.map((feat, i) => (
               <div
                 key={i}
@@ -152,20 +151,25 @@ export function About() {
                 </p>
               </div>
             ))}
-          </div>
+          </Reveal>
         </div>
 
-        {/* The turn */}
-        <div className="flex w-full flex-col items-center gap-10">
+        <Reveal className="w-full">
           <h3 className="text-center font-[family-name:var(--font-inter)] text-[clamp(1.75rem,5vw,3.25rem)] font-black uppercase leading-[0.9] tracking-[-0.04em] text-lf-type">
             Then he became
             <span className="ml-[0.16em] font-[family-name:var(--font-display)] font-normal tracking-[0.01em]">
               the dictator
             </span>
           </h3>
-          <Transformation />
-        </div>
+        </Reveal>
       </div>
+
+      {/* Outside the padded column: pinning needs the trigger to own its own
+          full-height block, and overflow-hidden on an ancestor would break the
+          pin, which is why the section no longer clips. */}
+      <Transformation />
+
+      <div className="h-32" />
     </section>
   );
 }
