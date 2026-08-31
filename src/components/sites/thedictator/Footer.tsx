@@ -1,7 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
+import {
+  RegimeAccordion,
+  type RegimeMember,
+} from "@/components/sites/thedictator/RegimeAccordion";
 
 /**
  * Footer — the character lineup, the FAQ, and the functional bits.
@@ -14,14 +17,18 @@ import { useState } from "react";
  * if JS fails — an accordion rebuilt from divs and onClick gets none of that.
  */
 
-/** Everything the lineup renders. Add entries as more characters arrive. */
-const CAST = [
+/**
+ * The six. Entries without a src render as empty slots rather than broken
+ * images — drop a file in and add the path as more characters arrive.
+ */
+const CAST: RegimeMember[] = [
   { src: "/sites/thedictator/images/dictator-portrait.png", name: "The Dictator" },
   { src: "/sites/thedictator/images/crash-pfp.jpg", name: "$CRASH" },
-] as const;
-
-/** Empty frames so the lineup reads as a set with room to grow. */
-const CAST_PLACEHOLDERS = 4;
+  { name: "[ name ]" },
+  { name: "[ name ]" },
+  { name: "[ name ]" },
+  { name: "[ name ]" },
+];
 
 /** Swap for the real questions. */
 const FAQ = Array.from({ length: 5 }, (_, i) => ({
@@ -83,37 +90,7 @@ export function Footer() {
             The regime
           </h2>
 
-          <div className="grid w-full grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-6">
-            {CAST.map((member) => (
-              <figure key={member.name} className="group flex flex-col gap-2">
-                <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/10">
-                  <Image
-                    src={member.src}
-                    alt={member.name}
-                    fill
-                    sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 170px"
-                    className="object-cover transition-transform duration-300 group-hover:scale-[1.05]"
-                  />
-                </div>
-                <figcaption className="text-center font-[family-name:var(--font-inter)] text-[11px] font-bold uppercase tracking-[0.12em] text-white/50">
-                  {member.name}
-                </figcaption>
-              </figure>
-            ))}
-
-            {Array.from({ length: CAST_PLACEHOLDERS }, (_, i) => (
-              <figure key={`slot-${i}`} className="flex flex-col gap-2">
-                <div className="flex aspect-square items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/[0.03]">
-                  <span className="font-[family-name:var(--font-inter)] text-[10px] uppercase tracking-[0.12em] text-white/30">
-                    Character
-                  </span>
-                </div>
-                <figcaption className="text-center font-[family-name:var(--font-inter)] text-[11px] font-bold uppercase tracking-[0.12em] text-white/25">
-                  [ name ]
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+          <RegimeAccordion members={CAST} />
         </div>
 
         {/* FAQ */}

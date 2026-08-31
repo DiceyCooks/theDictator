@@ -125,10 +125,7 @@ function Transformation() {
 
 export function About() {
   return (
-    <section
-      id="about"
-      className="lf-about-ground relative w-full scroll-mt-[72px]"
-    >
+    <section className="lf-about-ground relative w-full">
       {/* Particle field. The inner layer is STICKY and one viewport tall, not
           stretched over the whole section: with the pinned turn this section runs
           to several thousand pixels, and a canvas that size would allocate a

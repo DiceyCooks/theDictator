@@ -143,6 +143,21 @@ export function SpotlightScene({ children }: { children: React.ReactNode }) {
       <div ref={portrait} className="relative z-[2] mt-20 w-full sm:mt-24">
         {children}
       </div>
+
+      {/* #about lands HERE, not at the top of the section.
+          The spotlight scrub runs start "top 75%" -> end "bottom 70%", so the
+          light has finished landing on the portrait exactly when this scene's
+          bottom reaches 70% of the viewport. A zero-height anchor at the scene
+          bottom with scroll-margin-top:70vh resolves to that same scroll offset,
+          so the nav link arrives with the light already on him rather than at
+          the top of the section with nothing lit yet.
+          Doing it with scroll-margin keeps it in CSS — no click handler, and it
+          still works with Lenis driving the scroll. */}
+      <div
+        id="about"
+        aria-hidden="true"
+        className="pointer-events-none h-0 scroll-mt-[70vh]"
+      />
     </div>
   );
 }
