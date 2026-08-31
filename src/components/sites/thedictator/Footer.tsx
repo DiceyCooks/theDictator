@@ -30,7 +30,7 @@ const FAQ = Array.from({ length: 5 }, (_, i) => ({
 }));
 
 const SOCIALS = [
-  { label: "X", href: "#" },
+  { label: "X", href: "https://x.com/CrashiusClay69" },
   { label: "Telegram", href: "#" },
   { label: "Discord", href: "#" },
   { label: "DexScreener", href: "#" },
@@ -157,7 +157,9 @@ export function Footer() {
             <a
               key={s.label}
               href={s.href}
-              className="font-[family-name:var(--font-inter)] text-[14px] font-bold uppercase tracking-[0.02em] text-lf-ui transition-opacity duration-200 hover:opacity-60"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-[family-name:var(--font-inter)] text-[14px] font-bold uppercase tracking-[0.02em] text-lf-ui transition-opacity duration-200 hover:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
               {s.label}
             </a>

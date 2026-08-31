@@ -24,6 +24,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const HEADLINE = "WHO IS $CRASH?";
 
+/** Keep these two in step — the label must match where the link actually goes. */
+const TWITTER_HANDLE = "@CrashiusClay69";
+const TWITTER_URL = "https://x.com/CrashiusClay69";
+
 export function SpotlightScene({ children }: { children: React.ReactNode }) {
   const scene = useRef<HTMLDivElement>(null);
   const glow = useRef<HTMLDivElement>(null);
@@ -58,7 +62,6 @@ export function SpotlightScene({ children }: { children: React.ReactNode }) {
       // Positions come from measured offsets so the glow tracks the actual
       // glyphs rather than an assumed even spread — the "$CRASH" run is set in
       // a different face and is materially wider per character.
-      const headRect = headline.current!.getBoundingClientRect();
       const sceneRect = scene.current!.getBoundingClientRect();
 
       letters.forEach((letter, i) => {
@@ -71,14 +74,21 @@ export function SpotlightScene({ children }: { children: React.ReactNode }) {
         tl.to(letter, { opacity: 1, duration: 0.3, ease: "power2.out" }, at);
       });
 
-      // 3 — it leaves the type and settles on him, tightening as it lands
-      const pRect = portrait.current.getBoundingClientRect();
+      // 3 — it leaves the type and settles on HIM, tightening as it lands.
+      //
+      // Target the portrait itself, not the wrapper. The wrapper spans the whole
+      // two-column row, so its centre sits in the gap between the image and the
+      // copy — aiming there put the light on the text.
+      const target =
+        scene.current!.querySelector<HTMLElement>("[data-spotlight-target]") ??
+        portrait.current;
+      const pRect = target.getBoundingClientRect();
       const px = pRect.left + pRect.width / 2 - sceneRect.left;
       const py = pRect.top + pRect.height / 2 - sceneRect.top;
 
       tl.to(
         glow.current,
-        { x: px, y: py, scale: 0.72, duration: 1.4, ease: "power2.inOut" },
+        { x: px, y: py, scale: 0.58, duration: 1.4, ease: "power2.inOut" },
         4.2,
       );
       tl.from(
@@ -88,8 +98,6 @@ export function SpotlightScene({ children }: { children: React.ReactNode }) {
       );
       // The headline dims back down so he is the only lit thing at the end.
       tl.to(letters, { opacity: 0.42, duration: 1, stagger: 0.01 }, 4.4);
-
-      void headRect;
     }, scene);
 
     return () => ctx.revert();
@@ -143,14 +151,30 @@ export function SpotlightScene({ children }: { children: React.ReactNode }) {
 export function SpotlightPortrait() {
   return (
     <div className="grid w-full items-center gap-12 sm:grid-cols-[minmax(0,320px)_1fr] sm:gap-16">
-      <div className="relative mx-auto aspect-square w-full max-w-[320px] overflow-hidden rounded-2xl">
-        <Image
-          src="/sites/thedictator/images/crash-pfp.jpg"
-          alt="$CRASH"
-          fill
-          sizes="(max-width: 810px) 80vw, 320px"
-          className="object-cover"
-        />
+      <div className="mx-auto flex w-full max-w-[320px] flex-col items-center gap-4">
+        {/* data-spotlight-target is what the light aims at — the image itself,
+            not the row around it. */}
+        <div
+          data-spotlight-target
+          className="relative aspect-square w-full overflow-hidden rounded-2xl"
+        >
+          <Image
+            src="/sites/thedictator/images/crash-pfp.jpg"
+            alt="$CRASH"
+            fill
+            sizes="(max-width: 810px) 80vw, 320px"
+            className="object-cover"
+          />
+        </div>
+
+        <a
+          href={TWITTER_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-[family-name:var(--font-display)] text-[20px] leading-none tracking-[0.01em] text-lf-ui transition-opacity duration-200 hover:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+        >
+          {TWITTER_HANDLE}
+        </a>
       </div>
 
       <div className="flex flex-col gap-5">
