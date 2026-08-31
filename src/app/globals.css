@@ -129,14 +129,14 @@
   }
 }
 /* ==========================================================================
-   Site: lilfrogeth.com  (site-key thedictator)
-   Tokens are `--lf-` prefixed so additional cloned sites cannot collide.
+   THEDICTATOR / $CRASH
+   Tokens are `--lf-` prefixed. The prefix is historical and kept only because
+   it is threaded through every component; it carries no meaning now.
    Source values extracted via getComputedStyle() at 1440x900.
    ========================================================================== */
 
 :root {
   --lf-ink: oklch(0 0 0);
-  --lf-acid: oklch(0.949 0.146 108.2);
 
   /* Hero display type. White, sitting on the black sky. */
   --lf-type: oklch(1 0 0);
@@ -161,37 +161,15 @@
   --lf-sky-high: oklch(0.045 0.012 262);
   --lf-sky-mid: oklch(0.105 0.018 256);
   --lf-sky-low: oklch(0.185 0.024 250);
-  --lf-cyan: oklch(0.78 0.132 231.5);
-  --lf-green: oklch(0.878 0.221 148.6);
   --lf-paper: oklch(1 0 0);
 
-  --lf-body: rgba(0, 0, 0, 0.95);
-  --lf-scrim: rgba(15, 15, 15, 0.8);
-  --lf-hairline: rgba(255, 255, 255, 0.11);
-
-  /* 14px body / 16.1px line-height = 1.15; tracking -0.35px = -0.025em */
-  --lf-tracking-tight: -0.025em;
-  --lf-tracking-snug: -0.02em;
-  --lf-leading-body: 1.15;
-
-  /* Hero marquee rows alternate between two variants */
-  --lf-row-a: 190px;
-  --lf-row-b: 186px;
 }
 
 @theme inline {
-  /* Framer's phone breakpoint: below it the mobile variant renders. */
-  --breakpoint-lf: 810px;
-  /* Large-desktop variant. Heights are fixed within each variant; the five
-     blocks that looked fluid were simply this variant read against the other. */
-  --breakpoint-lflg: 1600px;
 
   --color-lf-ink: var(--lf-ink);
-  --color-lf-acid: var(--lf-acid);
   --color-lf-type: var(--lf-type);
   --color-lf-ui: var(--lf-ui);
-  --color-lf-cyan: var(--lf-cyan);
-  --color-lf-green: var(--lf-green);
   --color-lf-paper: var(--lf-paper);
 }
 
