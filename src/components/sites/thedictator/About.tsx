@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Reveal } from "@/components/sites/thedictator/shared/Reveal";
 import {
   SpotlightPortrait,
   SpotlightScene,
@@ -17,18 +16,12 @@ import {
  * navy. The hero's ground shape is filled with the colour of whatever sits below
  * it, so this section's first 8% MUST stay --lf-ink or the join reappears.
  *
- * Beats: the spotlight finds the headline and then him, the record, then the
- * turn where the original pfp becomes the dictator.
+ * Beats: the spotlight finds the headline and then him, then the turn where the
+ * original pfp becomes the dictator.
  *
  * ALL COPY AND FIGURES ARE PLACEHOLDERS. Nothing states a real trade or result;
  * every slot is bracketed so it is obvious what still needs writing.
  */
-
-const FEATS = [
-  { label: "[ Metric ]", value: "[ — ]", note: "[ one line of context ]" },
-  { label: "[ Metric ]", value: "[ — ]", note: "[ one line of context ]" },
-  { label: "[ Metric ]", value: "[ — ]", note: "[ one line of context ]" },
-] as const;
 
 /**
  * The turn. Two identically-framed portraits crossfaded on scroll.
@@ -77,9 +70,23 @@ function Transformation() {
   return (
     <div
       ref={wrap}
-      className="flex h-screen w-full flex-col items-center justify-center gap-8"
+      // Height excludes the fixed 64px info bar so centred content lands in the
+      // space actually free. Padding-bottom does not work here: justify-center
+      // centres within the PADDED box, so pb only lifts content by half its
+      // value and the caption still ran under the bar.
+      // svh, not vh, so mobile browser chrome does not push it off-screen.
+      className="flex h-[calc(100svh-64px)] w-full flex-col items-center justify-center gap-6 px-6"
     >
-      <div className="relative aspect-square w-full max-w-[min(420px,58vh)]">
+      <h3 className="text-center font-[family-name:var(--font-inter)] text-[clamp(1.5rem,4.2vw,2.75rem)] font-black uppercase leading-[0.95] tracking-[-0.04em] text-lf-type">
+        Then he became
+        <span className="ml-[0.16em] font-[family-name:var(--font-display)] font-normal tracking-[0.01em]">
+          the dictator
+        </span>
+      </h3>
+
+      {/* Sized against viewport height, not just width: the heading and caption
+          share this pinned screen, so the panel has to give them room. */}
+      <div className="relative aspect-square w-full max-w-[min(380px,44vh)]">
         <div
           ref={before}
           className="absolute inset-0 overflow-hidden rounded-2xl"
@@ -125,43 +132,6 @@ export function About() {
         <SpotlightScene>
           <SpotlightPortrait />
         </SpotlightScene>
-
-        {/* The record */}
-        <div className="w-full">
-          <Reveal>
-            <p className="mb-8 text-center font-[family-name:var(--font-inter)] text-[11px] font-bold uppercase tracking-[0.18em] text-white/40">
-              The record
-            </p>
-          </Reveal>
-
-          <Reveal stagger={0.12} className="grid gap-4 sm:grid-cols-3 sm:gap-5">
-            {FEATS.map((feat, i) => (
-              <div
-                key={i}
-                className="rounded-2xl border border-white/10 bg-white/[0.04] px-6 py-7 text-center backdrop-blur-sm"
-              >
-                <p className="font-[family-name:var(--font-inter)] text-[11px] font-bold uppercase tracking-[0.14em] text-white/45">
-                  {feat.label}
-                </p>
-                <p className="my-2 font-[family-name:var(--font-display)] text-[34px] leading-none tracking-[0.01em] text-lf-type [font-variant-numeric:tabular-nums]">
-                  {feat.value}
-                </p>
-                <p className="font-[family-name:var(--font-inter)] text-[13px] leading-snug text-white/50">
-                  {feat.note}
-                </p>
-              </div>
-            ))}
-          </Reveal>
-        </div>
-
-        <Reveal className="w-full">
-          <h3 className="text-center font-[family-name:var(--font-inter)] text-[clamp(1.75rem,5vw,3.25rem)] font-black uppercase leading-[0.9] tracking-[-0.04em] text-lf-type">
-            Then he became
-            <span className="ml-[0.16em] font-[family-name:var(--font-display)] font-normal tracking-[0.01em]">
-              the dictator
-            </span>
-          </h3>
-        </Reveal>
       </div>
 
       {/* Outside the padded column: pinning needs the trigger to own its own
