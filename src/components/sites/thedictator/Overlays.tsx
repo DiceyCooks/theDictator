@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Grain } from "@/components/sites/thedictator/shared/Grain";
 
 /**
  * The three fixed overlays that sit above the scrolling page.
@@ -11,7 +10,6 @@ import { Grain } from "@/components/sites/thedictator/shared/Grain";
  * would put them under a transformed ancestor and break position: fixed.
  *
  * Measured on the target:
- *   grain   full viewport, inset 0, z-index 10, pointer-events: none
  *   nav     717x51, top 10px, horizontally centred, z-index 10
  *   bottom  full width x 64px, pinned to the bottom, z-index 9
  *
@@ -123,10 +121,6 @@ export function Overlays() {
         className="pointer-events-none absolute left-0 top-0 w-px"
         style={{ height: GLASS_THRESHOLD }}
       />
-
-      {/* Grain — animated now, not a printed texture. Decorative only, never
-          intercepts pointer events. */}
-      <Grain opacity={0.16} className="z-10 mix-blend-overlay" />
 
       {/* Top nav.
           At the top of the page the labels float free with no container. Past

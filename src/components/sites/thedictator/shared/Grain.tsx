@@ -5,8 +5,10 @@ import { useEffect, useRef } from "react";
 /**
  * Animated film grain.
  *
- * Replaces the static SVG-turbulence grain, which never moved and so read as a
- * texture printed on the glass rather than grain in the image.
+ * Positioned ABSOLUTE, not fixed — it covers whichever element it is dropped
+ * into rather than the whole viewport, so the texture can be scoped to one
+ * moment instead of sitting over the entire page. The parent needs position
+ * relative.
  *
  * PERFORMANCE. Randomising every pixel of a 1920x1080 overlay is ~2 million
  * writes per frame and will cook a laptop fan. Two things keep this cheap:
@@ -84,7 +86,7 @@ export function Grain({
     <canvas
       ref={ref}
       aria-hidden="true"
-      className={`pointer-events-none fixed inset-0 h-full w-full ${className}`}
+      className={`pointer-events-none absolute inset-0 h-full w-full ${className}`}
       style={{ opacity }}
     />
   );

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Particles } from "@/components/sites/thedictator/shared/Particles";
 import {
   SpotlightPortrait,
   SpotlightScene,
@@ -75,7 +76,7 @@ function Transformation() {
       // centres within the PADDED box, so pb only lifts content by half its
       // value and the caption still ran under the bar.
       // svh, not vh, so mobile browser chrome does not push it off-screen.
-      className="flex h-[calc(100svh-64px)] w-full flex-col items-center justify-center gap-6 px-6"
+      className="relative z-[1] flex h-[calc(100svh-64px)] w-full flex-col items-center justify-center gap-6 px-6"
     >
       <h3 className="text-center font-[family-name:var(--font-inter)] text-[clamp(1.5rem,4.2vw,2.75rem)] font-black uppercase leading-[0.95] tracking-[-0.04em] text-lf-type">
         Then he became
@@ -128,7 +129,21 @@ export function About() {
       id="about"
       className="lf-about-ground relative w-full scroll-mt-[72px]"
     >
-      <div className="mx-auto flex max-w-[1100px] flex-col items-center gap-28 px-6 pb-32 pt-32 sm:gap-36 sm:pt-48">
+      {/* Particle field. The inner layer is STICKY and one viewport tall, not
+          stretched over the whole section: with the pinned turn this section runs
+          to several thousand pixels, and a canvas that size would allocate a
+          backing store of tens of megabytes for no visible gain. Sticky keeps it
+          viewport-sized while still reading as continuous on the way down. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+      >
+        <div className="sticky top-0 h-screen w-full">
+          <Particles density={80} max={220} />
+        </div>
+      </div>
+
+      <div className="relative z-[1] mx-auto flex max-w-[1100px] flex-col items-center gap-28 px-6 pb-32 pt-32 sm:gap-36 sm:pt-48">
         <SpotlightScene>
           <SpotlightPortrait />
         </SpotlightScene>

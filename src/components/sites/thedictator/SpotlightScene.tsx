@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Grain } from "@/components/sites/thedictator/shared/Grain";
 
 /**
  * The spotlight beat: a light sweeps the headline letter by letter, then leaves
@@ -143,6 +144,13 @@ export function SpotlightScene({ children }: { children: React.ReactNode }) {
       <div ref={portrait} className="relative z-[2] mt-20 w-full sm:mt-24">
         {children}
       </div>
+
+      {/* Grain, scoped to this scene only — above the content so it textures the
+          type and the portrait rather than sitting under them. It reinforces the
+          spotlight: a beam of light is where you notice grain, so keeping it
+          here and nowhere else makes it read as part of the effect instead of a
+          filter over the whole page. */}
+      <Grain opacity={0.14} className="z-[3] mix-blend-overlay" />
     </div>
   );
 }
