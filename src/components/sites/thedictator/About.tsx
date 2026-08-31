@@ -49,31 +49,33 @@ function Transformation() {
           className="relative aspect-square w-full max-w-[min(420px,62vh)]"
           data-transform-stack
         >
-          {/* Before — the original pfp. Drop the file in and this becomes an
-              <Image> matching the dictator frame below. */}
+          {/* Before — the original pfp */}
           <div
-            className="absolute inset-0 flex items-center justify-center rounded-2xl border border-dashed border-white/25 bg-white/[0.03] p-6 text-center"
+            className="absolute inset-0 overflow-hidden rounded-2xl"
             style={{ opacity: 1 - ease }}
           >
-            <span className="font-[family-name:var(--font-inter)] text-[13px] uppercase leading-relaxed tracking-[0.08em] text-white/55">
-              Original pfp
-              <span className="mt-2 block text-[11px] normal-case tracking-normal text-white/35">
-                drop the file in and I&apos;ll wire it
-              </span>
-            </span>
+            <Image
+              src="/sites/thedictator/images/crash-pfp.jpg"
+              alt="$CRASH, before"
+              fill
+              sizes="(max-width: 810px) 80vw, 420px"
+              className="object-cover"
+            />
           </div>
 
-          {/* After — the dictator */}
+          {/* After — the dictator. Both frames are 1:1 and cropped the same
+              way, so this reads as one character changing rather than a cut
+              between two different shots. */}
           <div
-            className="absolute inset-0"
-            style={{ opacity: ease, transform: `scale(${0.94 + ease * 0.06})` }}
+            className="absolute inset-0 overflow-hidden rounded-2xl"
+            style={{ opacity: ease, transform: `scale(${0.96 + ease * 0.04})` }}
           >
             <Image
-              src="/sites/thedictator/images/hero-figure-v2.png"
+              src="/sites/thedictator/images/dictator-portrait.png"
               alt="THE DICTATOR"
               fill
               sizes="(max-width: 810px) 80vw, 420px"
-              className="object-contain"
+              className="object-cover"
             />
           </div>
         </div>
@@ -105,11 +107,15 @@ export function About() {
         </h2>
 
         <div className="grid w-full items-center gap-12 sm:grid-cols-[minmax(0,320px)_1fr] sm:gap-16">
-          {/* Original pfp again, at intro size */}
-          <div className="mx-auto flex aspect-square w-full max-w-[320px] items-center justify-center rounded-2xl border border-dashed border-white/25 bg-white/[0.03] p-6 text-center">
-            <span className="font-[family-name:var(--font-inter)] text-[13px] uppercase tracking-[0.08em] text-white/55">
-              Original pfp
-            </span>
+          {/* Original pfp */}
+          <div className="relative mx-auto aspect-square w-full max-w-[320px] overflow-hidden rounded-2xl">
+            <Image
+              src="/sites/thedictator/images/crash-pfp.jpg"
+              alt="$CRASH"
+              fill
+              sizes="(max-width: 810px) 80vw, 320px"
+              className="object-cover"
+            />
           </div>
 
           <div className="flex flex-col gap-5">

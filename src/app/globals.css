@@ -370,3 +370,17 @@ html.lenis body {
     var(--lf-navy-900) 100%
   );
 }
+
+/* Footer ground.
+   Picks up where About leaves off — that section ends on --lf-navy-900, so the
+   footer opens on the same value and there is no seam between them. It then
+   sinks toward ink so the page closes darker than it opened. */
+.lf-footer-ground {
+  background: linear-gradient(
+    to bottom,
+    var(--lf-navy-900) 0%,
+    var(--lf-navy-700) 26%,
+    var(--lf-navy-900) 68%,
+    var(--lf-ink) 100%
+  );
+}
